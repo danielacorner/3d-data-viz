@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { useWindowSize } from "../../utils/hooks";
 import * as THREE from "three";
 import { Html } from "@react-three/drei";
@@ -9,11 +9,10 @@ import {
   Stars,
   Stats,
 } from "@react-three/drei";
+import Youtubes from "../Youtubes";
 import { Lighting } from "../Lighting/Lighting";
-import { Physics, Debug } from "@react-three/cannon";
-import { PHYSICS_PROPS } from "../PHYSICS_PROPS";
+import { Debug } from "@react-three/cannon";
 import SpinScene from "../SpinScene";
-import SpinningParticle from "./SpinningParticle/SpinningParticle";
 import { Controls } from "react-three-gui";
 import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
 import {
@@ -28,7 +27,6 @@ import {
   CAMERA_POSITION_INITIAL,
   INITIAL_CAMERA_POSITION,
 } from "../../utils/constants";
-import Walls from "./Walls";
 import { useTurbidityByTimeOfDay } from "./useTurbidityByTimeOfDay";
 import { useAtom } from "jotai";
 
@@ -55,12 +53,12 @@ export default function CanvasAndScene() {
           {...{ camera: { fov: 75, position: CAMERA_POSITION_INITIAL } }}
           style={{ height: windowSize.height, width: windowSize.width }}
         >
-          <SpinScene>
-            <ErrorBoundary component={<Html>❌ Scene</Html>}>
-              <Scene />
-              {isInfoOverlayVisible && <Stats className="fpsStats" />}
-            </ErrorBoundary>
-          </SpinScene>
+          {/* <SpinScene> */}
+          <ErrorBoundary component={<Html>❌ Scene</Html>}>
+            <Scene />
+            {isInfoOverlayVisible && <Stats className="fpsStats" />}
+          </ErrorBoundary>
+          {/* </SpinScene> */}
           <Lighting />
         </Canv>
         {process.env.NODE_ENV !== "production" &&
@@ -75,7 +73,6 @@ function Scene() {
   const turbidity = useTurbidityByTimeOfDay();
   const isZoomed = useIsZoomed();
   useResetCameraWhenZoomed();
-  const [isRollingDie] = useAtom(isRollingDieAtom);
   return (
     <>
       {false && process.env.NODE_ENV === "development" ? (
@@ -91,7 +88,8 @@ function Scene() {
         mieDirectionalG={1}
         turbidity={turbidity}
       />
-      <Physics
+      <Youtubes />
+      {/* <Physics
         {...{ ...PHYSICS_PROPS, gravity: [0, 0, isRollingDie ? -30 : 0] }}
       >
         <Debugger>
@@ -99,20 +97,20 @@ function Scene() {
             <D20AndPlanes />
           </ErrorBoundary>
         </Debugger>
-      </Physics>
+      </Physics> */}
     </>
   );
 }
-function D20AndPlanes() {
-  return (
-    <mesh>
-      <ErrorBoundary component={<Html>❌ SpinningParticle</Html>}>
-        <SpinningParticle />
-      </ErrorBoundary>
-      <Walls />
-    </mesh>
-  );
-}
+// function D20AndPlanes() {
+//   return (
+//     <mesh>
+//       <ErrorBoundary component={<Html>❌ SpinningParticle</Html>}>
+//         <SpinningParticle />
+//       </ErrorBoundary>
+//       <Walls />
+//     </mesh>
+//   );
+// }
 
 const ANIMATION_SPEED = 0.07; // 0 to 1
 function useResetCameraWhenZoomed() {
