@@ -1,21 +1,20 @@
 import { IconButton, Tooltip } from "@material-ui/core";
 import { Undo } from "@material-ui/icons";
-import { useThree } from "react-three-fiber";
+import { useAtom } from "jotai";
 import styled from "styled-components/macro";
-import { INITIAL_CAMERA_POSITION } from "../../utils/constants";
+import { resetPositionKeyAtom } from "../store/store";
 
 /** show or hide the info overlay */
 export function ResetPositionButton() {
-  const { camera } = useThree();
-
-  const { x, y, z } = INITIAL_CAMERA_POSITION;
+  const [, setResetPositionKey] = useAtom(resetPositionKeyAtom);
   return (
     <ResetPositionButtonStyles>
       <Tooltip title="reset camera position">
         <IconButton>
           <IconButton
             onClick={() => {
-              camera.position.set(x, y, z);
+              // trigger a camera position reset
+              setResetPositionKey(Math.random());
             }}
           >
             <Undo />

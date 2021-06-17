@@ -4,6 +4,7 @@ import { atom, useAtom } from "jotai";
 // jotai + typescript https://docs.pmnd.rs/jotai/guides/typescript
 // "jotai is bottom-up, like recoil; zustand is top-down, like redux
 
+export const resetPositionKeyAtom = atom<number>(0);
 export const isRollingDieAtom = atom<boolean>(false);
 export const impulseAmountAtom = atom<number>(10);
 export const isRollingCompleteAtom = atom<boolean>(false);

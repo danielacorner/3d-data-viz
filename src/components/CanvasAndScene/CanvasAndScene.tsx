@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useWindowSize } from "../../utils/hooks";
 import * as THREE from "three";
 import { Html } from "@react-three/drei";
@@ -16,9 +16,10 @@ import {
   isInfoOverlayVisibleAtom,
   isRollingCompleteAtom,
   isRollingDieAtom,
+  resetPositionKeyAtom,
   useIsZoomed,
 } from "../store/store";
-import { useFrame, useThree, Canvas } from "@react-three/fiber";
+import { useFrame, Canvas } from "@react-three/fiber";
 import { ErrorBoundary } from "../ErrorBoundary";
 import {
   CAMERA_POSITION_INITIAL,
@@ -69,6 +70,7 @@ export default function CanvasAndScene() {
 function Scene() {
   const turbidity = useTurbidityByTimeOfDay();
   useResetCameraWhenZoomed();
+  useResetCameraOnResetPositionButtonClick();
   return (
     <>
       <OrbitControls {...({} as any)} />
@@ -114,13 +116,45 @@ function useResetCameraWhenZoomed() {
   const isZoomed = useIsZoomed();
   const [isRollingDie] = useAtom(isRollingDieAtom);
   const [isRollingComplete] = useAtom(isRollingCompleteAtom);
-  const camera = useThree(({ camera }) => camera);
+  // const camera = useThree(({ camera }) => camera);
 
   const isResettingCameraPosition =
     !isRollingDie && (isZoomed || isRollingComplete);
+  useResetCameraPosition(isResettingCameraPosition);
+}
 
-  useFrame(() => {
-    if (isResettingCameraPosition) {
+export const SECONDS_IN_DAY = 24 * 60 * 60;
+export const TURBIDITY = { max: -50, min: 100 };
+
+// function Debugger({ children }) {
+//   return process.env.NODE_ENV === "development" ? (
+//     <Debug color="black">{children}</Debug>
+//   ) : (
+//     <>{children}</>
+//   );
+// }
+
+const CAMERA_RESETTING_TIME = 500;
+function useResetCameraOnResetPositionButtonClick() {
+  const [resetPositionKey] = useAtom(resetPositionKeyAtom);
+
+  const [isResetting, setIsResetting] = useState(false);
+
+  useEffect(() => {
+    setIsResetting(true);
+    const timer = window.setTimeout(
+      () => setIsResetting(false),
+      CAMERA_RESETTING_TIME
+    );
+    return () => window.clearTimeout(timer);
+  }, [resetPositionKey]);
+
+  useResetCameraPosition(isResetting);
+}
+
+function useResetCameraPosition(isResetting: boolean) {
+  useFrame(({ camera }) => {
+    if (isResetting) {
       const delta = {
         x: INITIAL_CAMERA_POSITION.x - camera.position.x,
         y: INITIAL_CAMERA_POSITION.y - camera.position.y,
@@ -138,14 +172,3 @@ function useResetCameraWhenZoomed() {
     }
   });
 }
-
-export const SECONDS_IN_DAY = 24 * 60 * 60;
-export const TURBIDITY = { max: -50, min: 100 };
-
-// function Debugger({ children }) {
-//   return process.env.NODE_ENV === "development" ? (
-//     <Debug color="black">{children}</Debug>
-//   ) : (
-//     <>{children}</>
-//   );
-// }
