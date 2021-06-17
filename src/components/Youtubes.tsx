@@ -24,6 +24,8 @@ const Youtubes = () => {
 
 export default Youtubes;
 
+const PLAYER_SCALE = 0.2;
+
 function Player({
   position,
   url,
@@ -38,12 +40,27 @@ function Player({
       <meshBasicMaterial color="white" />
 
       {/* https://github.com/pmndrs/drei#html */}
-      <Html className="react-player-wrapper" transform={true} sprite={false}>
+      <Html
+        className="react-player-wrapper"
+        transform={true}
+        sprite={false}
+        style={{
+          pointerEvents: "none",
+          width: 530 * PLAYER_SCALE,
+          height: 300 * PLAYER_SCALE,
+        }}
+      >
+        {/* TODO: only show one player at a time, the rest are preview images */}
+        {/* https://www.npmjs.com/package/react-player */}
         <ReactPlayer
           width={530}
           height={300}
-          style={{ transform: "scale(0.2)" }}
+          style={{
+            transform: `scale(${PLAYER_SCALE})`,
+            transformOrigin: "top left",
+          }}
           // playing={isPlaying}
+          light={true}
           url={url}
         />
       </Html>
@@ -54,14 +71,14 @@ function Player({
 // dome = cube with 9 on each side (9+9+8=26 total)
 const SIDE_DISTANCE = 10;
 const sidesZ = [
-  SIDE_DISTANCE, // back
+  SIDE_DISTANCE, // front (towards you)
   0, // center
-  -SIDE_DISTANCE, // front
+  -SIDE_DISTANCE, // back (towards the screen)
 ];
 const RELATIVE_DOME_POSITIONS = sidesZ.reduce(
   (acc, s) => [
     ...acc,
-    [0, 0, s], // center
+    ...(s === sidesZ[0] ? [] : [[0, 0, s]]), // center
     [SIDE_DISTANCE, 0, s], // right
     [-SIDE_DISTANCE, 0, s], // left
     [0, SIDE_DISTANCE, s], // top
