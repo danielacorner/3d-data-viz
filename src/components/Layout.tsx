@@ -5,7 +5,7 @@ import { useAtom } from "jotai";
 
 const Layout = ({ children }) => {
   const gpuInfo = useDetectGPU();
-  const isInfoOverlayVisible = useAtom(isInfoOverlayVisibleAtom);
+  const [isInfoOverlayVisible] = useAtom(isInfoOverlayVisibleAtom);
 
   return (
     <LayoutStyles>

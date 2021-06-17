@@ -20,13 +20,13 @@ export function useSpinObjects(
   ref5: React.MutableRefObject<any>
 ) {
   const isZoomed = useIsZoomed();
-  const isRollingDie = useAtom(isRollingDieAtom);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
   const d20Rotation = useRotateWithScroll();
 
   const rotationSpeed = !isZoomed ? 0.12 : 0.05;
 
   // manually detect when we just went from isZoomed to !isZoomed
-  const isZoomingOut = useAtom(isZoomingOutAtom);
+  const [isZoomingOut] = useAtom(isZoomingOutAtom);
 
   const shouldResetRotation = isRollingDie;
 

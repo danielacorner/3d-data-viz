@@ -8,7 +8,7 @@ export const isRollingDieAtom = atom<boolean>(false);
 export const impulseAmountAtom = atom<number>(10);
 export const isRollingCompleteAtom = atom<boolean>(false);
 export const isZoomingOutAtom = atom<boolean>(false);
-export const isSpinningAtom = atom<boolean>(false);
+export const isSpinningAtom = atom<boolean>(true);
 export const isScrollingAtom = atom<boolean>(false);
 export const isScrollableAtom = atom<boolean>(true);
 export const isPropertyAnimatingAtom = atom<boolean>(false);
@@ -18,18 +18,16 @@ export const isInfoOverlayVisibleAtom = atomWithLocalStorage(
 );
 export const scrollTopPctAtom = atom<number>(0);
 export const scrollYAtom = atom<number>(0);
-
+export const isZoomedAtom = atom<boolean>(false);
+export function useIsZoomed() {
+  const [animationStep] = useAtom(animationStepAtom);
+  return animationStep > 1;
+}
 export const animationStepAtom = atomWithLocalStorage("store:animationStep", 0);
 export function useAnimationStep() {
   return useAtom(animationStepAtom)[0];
 }
 
-export const isZoomedAtom = atom<boolean>(false);
-
-export function useIsZoomed() {
-  const [animationStep] = useAtom(animationStepAtom);
-  return animationStep > 1;
-}
 export function useIsSpinning() {
   const isZoomed = useIsZoomed();
   const [isRollingDie] = useAtom(isRollingDieAtom);

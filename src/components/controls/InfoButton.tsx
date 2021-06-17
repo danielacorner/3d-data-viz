@@ -14,7 +14,7 @@ export function InfoButton() {
   const { isDaytime } = getTimeOfDay();
   return (
     <InfoButtonStyles>
-      <Tooltip title="GPU info 💻">
+      <Tooltip title="ℹ more info">
         <IconButton
           onClick={() => {
             setIsInfoOverlayVisible(!isInfoOverlayVisible);

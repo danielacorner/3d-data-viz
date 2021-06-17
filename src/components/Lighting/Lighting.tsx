@@ -39,8 +39,8 @@ function LightFollowsMouse() {
   const box = useRef(null as any);
   const spotlightBox = useRef(null as any);
   const isZoomed = useIsZoomed();
-  const isRollingDie = useAtom(isRollingDieAtom);
-  const isRollingComplete = useAtom(isRollingCompleteAtom);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
+  const [isRollingComplete] = useAtom(isRollingCompleteAtom);
   const isD20Opaque = isRollingDie || isZoomed;
 
   const { viewport, mouse } = useThree();

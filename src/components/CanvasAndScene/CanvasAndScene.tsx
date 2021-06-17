@@ -37,7 +37,7 @@ const Canv = CONTROLLED ? Controls.Canvas : Canvas;
 
 export default function CanvasAndScene() {
   const windowSize = useWindowSize();
-  const isInfoOverlayVisible = useAtom(isInfoOverlayVisibleAtom);
+  const [isInfoOverlayVisible] = useAtom(isInfoOverlayVisibleAtom);
 
   return (
     <Suspense fallback={null}>
@@ -75,7 +75,7 @@ function Scene() {
   const turbidity = useTurbidityByTimeOfDay();
   const isZoomed = useIsZoomed();
   useResetCameraWhenZoomed();
-  const isRollingDie = useAtom(isRollingDieAtom);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
   return (
     <>
       {false && process.env.NODE_ENV === "development" ? (
@@ -117,8 +117,8 @@ function D20AndPlanes() {
 const ANIMATION_SPEED = 0.07; // 0 to 1
 function useResetCameraWhenZoomed() {
   const isZoomed = useIsZoomed();
-  const isRollingDie = useAtom(isRollingDieAtom);
-  const isRollingComplete = useAtom(isRollingCompleteAtom);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
+  const [isRollingComplete] = useAtom(isRollingCompleteAtom);
   const camera = useThree(({ camera }) => camera);
 
   const isResettingCameraPosition =

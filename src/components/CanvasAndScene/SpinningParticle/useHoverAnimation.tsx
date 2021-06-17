@@ -6,7 +6,7 @@ import { isRollingDieAtom, useIsZoomed } from "../../store/store";
 export function useHoverAnimation() {
   const ref = useRef(null as any);
   const izZoomed = useIsZoomed();
-  const isRollingDie = useAtom(isRollingDieAtom);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
   useFrame(({ clock }) => {
     if (!izZoomed) {
       return;
