@@ -1,10 +1,11 @@
+import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { NUM_ANIMATION_STEPS } from "../../utils/constants";
-import { useStore } from "./store";
+import { animationStepAtom, scrollTopPctAtom } from "./store";
 
 export function useSetAnimationStepOnScroll() {
-  const setAnimationStep = useStore((s) => s.setAnimationStep);
-  const scrollTopPct = useStore((s) => s.scrollTopPct);
+  const [, setAnimationStep] = useAtom(animationStepAtom);
+  const [scrollTopPct] = useAtom(scrollTopPctAtom);
 
   useEffect(() => {
     // step goes from 1 to 21

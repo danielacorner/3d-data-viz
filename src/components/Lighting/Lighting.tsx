@@ -2,9 +2,14 @@ import { Box, useDetectGPU } from "@react-three/drei";
 import { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useSpring, animated } from "@react-spring/three";
-import { useIsZoomed, useStore } from "../store/store";
+import {
+  isRollingCompleteAtom,
+  isRollingDieAtom,
+  useIsZoomed,
+} from "../store/store";
 import RGBLights from "./RGBLights";
 import { useControl } from "react-three-gui";
+import { useAtom } from "jotai";
 
 export function Lighting() {
   return (
@@ -34,8 +39,8 @@ function LightFollowsMouse() {
   const box = useRef(null as any);
   const spotlightBox = useRef(null as any);
   const isZoomed = useIsZoomed();
-  const isRollingDie = useStore((s) => s.isRollingDie);
-  const isRollingComplete = useStore((s) => s.isRollingComplete);
+  const isRollingDie = useAtom(isRollingDieAtom);
+  const isRollingComplete = useAtom(isRollingCompleteAtom);
   const isD20Opaque = isRollingDie || isZoomed;
 
   const { viewport, mouse } = useThree();

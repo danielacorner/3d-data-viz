@@ -1,22 +1,15 @@
-import { useStore } from "../store/store";
+import { isInfoOverlayVisibleAtom } from "../store/store";
 import { Info } from "@material-ui/icons";
 import { IconButton, Tooltip } from "@material-ui/core";
 import styled from "styled-components/macro";
-import { useLocalStorageState } from "../../utils/hooks";
-import { useEffect } from "react";
 import { getTimeOfDay } from "../../utils/timeUtils";
+import { useAtom } from "jotai";
 
 /** show or hide the info overlay */
 export function InfoButton() {
-  const [isInfoOverlayVisibleLS, setIsInfoOverlayVisibleLS] =
-    useLocalStorageState("isInfoOverlayVisible", false);
-  const set = useStore((s) => s.set);
-
-  // sync isInfoOverlayVisible to LS value
-  useEffect(() => {
-    set({ isInfoOverlayVisible: isInfoOverlayVisibleLS });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInfoOverlayVisibleLS]);
+  const [isInfoOverlayVisible, setIsInfoOverlayVisible] = useAtom(
+    isInfoOverlayVisibleAtom
+  );
 
   const { isDaytime } = getTimeOfDay();
   return (
@@ -24,7 +17,7 @@ export function InfoButton() {
       <Tooltip title="GPU info 💻">
         <IconButton
           onClick={() => {
-            setIsInfoOverlayVisibleLS(!isInfoOverlayVisibleLS);
+            setIsInfoOverlayVisible(!isInfoOverlayVisible);
           }}
           style={{ color: `hsla(0,0%,${isDaytime ? 0 : 100}%,50%)` }}
         >

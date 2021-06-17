@@ -2,17 +2,19 @@ import { Casino, Undo } from "@material-ui/icons";
 import { IconButton, Tooltip } from "@material-ui/core";
 import styled from "styled-components/macro";
 import { useEffect, useState } from "react";
-import { useStore } from "../store/store";
+import { isRollingCompleteAtom, isRollingDieAtom } from "../store/store";
 import { animated, useSpring } from "react-spring";
 import { ROLL_TIME } from "../../utils/constants";
+import { useAtom } from "jotai";
 
 const AnimatedIconButton = animated(IconButton);
 
 /** show or hide the info overlay */
 export function RollTheDieButton() {
-  const isRollingDie = useStore((s) => s.isRollingDie);
-  const isRollingComplete = useStore((s) => s.isRollingComplete);
-  const set = useStore((s) => s.set);
+  const [isRollingDie, setIsRollingDie] = useAtom(isRollingDieAtom);
+  const [isRollingComplete, setIsRollingComplete] = useAtom(
+    isRollingCompleteAtom
+  );
   const [isHovered, setIsHovered] = useState(false);
   const springRoll = useSpring({
     transform: `rotate(${isHovered || isRollingDie ? 352 : 8}deg)`,
@@ -25,10 +27,7 @@ export function RollTheDieButton() {
     let timer = null as number | null;
 
     if (isRollingComplete && !isRollingDie) {
-      timer = window.setTimeout(
-        () => set({ isRollingComplete: false }),
-        ROLL_TIME
-      );
+      timer = window.setTimeout(() => setIsRollingComplete(false), ROLL_TIME);
     }
     return () => {
       if (timer) {
@@ -50,7 +49,7 @@ export function RollTheDieButton() {
             ...springRoll,
             pointerEvents: isRollingDie ? "none" : "auto",
           }}
-          onClick={() => set({ isRollingDie: true })}
+          onClick={() => setIsRollingDie(true)}
         >
           <Casino />
         </AnimatedIconButton>
@@ -63,7 +62,7 @@ export function RollTheDieButton() {
             pointerEvents: isRollingDie ? "auto" : "none",
           }}
           onClick={() => {
-            set({ isRollingDie: false });
+            setIsRollingDie(false);
           }}
         >
           <Undo />

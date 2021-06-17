@@ -16,7 +16,12 @@ import SpinScene from "../SpinScene";
 import SpinningParticle from "./SpinningParticle/SpinningParticle";
 import { Controls } from "react-three-gui";
 import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
-import { useIsZoomed, useStore } from "../store/store";
+import {
+  isInfoOverlayVisibleAtom,
+  isRollingCompleteAtom,
+  isRollingDieAtom,
+  useIsZoomed,
+} from "../store/store";
 import { useFrame, useThree, Canvas } from "@react-three/fiber";
 import { ErrorBoundary } from "../ErrorBoundary";
 import {
@@ -25,13 +30,14 @@ import {
 } from "../../utils/constants";
 import Walls from "./Walls";
 import { useTurbidityByTimeOfDay } from "./useTurbidityByTimeOfDay";
+import { useAtom } from "jotai";
 
 const CONTROLLED = false;
 const Canv = CONTROLLED ? Controls.Canvas : Canvas;
 
 export default function CanvasAndScene() {
   const windowSize = useWindowSize();
-  const isInfoOverlayVisible = useStore((s) => s.isInfoOverlayVisible);
+  const isInfoOverlayVisible = useAtom(isInfoOverlayVisibleAtom);
 
   return (
     <Suspense fallback={null}>
@@ -69,7 +75,7 @@ function Scene() {
   const turbidity = useTurbidityByTimeOfDay();
   const isZoomed = useIsZoomed();
   useResetCameraWhenZoomed();
-  const isRollingDie = useStore((s) => s.isRollingDie);
+  const isRollingDie = useAtom(isRollingDieAtom);
   return (
     <>
       {false && process.env.NODE_ENV === "development" ? (
@@ -111,8 +117,8 @@ function D20AndPlanes() {
 const ANIMATION_SPEED = 0.07; // 0 to 1
 function useResetCameraWhenZoomed() {
   const isZoomed = useIsZoomed();
-  const isRollingDie = useStore((s) => s.isRollingDie);
-  const isRollingComplete = useStore((s) => s.isRollingComplete);
+  const isRollingDie = useAtom(isRollingDieAtom);
+  const isRollingComplete = useAtom(isRollingCompleteAtom);
   const camera = useThree(({ camera }) => camera);
 
   const isResettingCameraPosition =

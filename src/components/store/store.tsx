@@ -1,85 +1,76 @@
-import create from "zustand";
-import { useEffect } from "react";
-import { useLocalStorageState } from "../../utils/hooks";
+import { atom, useAtom } from "jotai";
 
-export function useSyncStoreStateToLS(stateKey: keyof GlobalStateType) {
-  const set = useStore((s) => s.set);
-  const state = useStore((s) => s[stateKey]);
-  const [stateLS, setStateLS] = useLocalStorageState(
-    `store:${stateKey}`,
-    state
-  );
+// jotai vs zustand https://github.com/pmndrs/jotai/issues/13
+// jotai + typescript https://docs.pmnd.rs/jotai/guides/typescript
+// "jotai is bottom-up, like recoil; zustand is top-down, like redux
 
-  // sync with store state, state with store
-  useEffect(() => {
-    setStateLS(state);
-    if (JSON.stringify(state) !== JSON.stringify(stateLS)) {
-      set({ [stateKey]: stateLS });
-    }
-  }, [set, state, stateKey, stateLS, setStateLS]);
-}
-
-type GlobalStateType = {
-  isZoomed: boolean;
-  isRollingDie: boolean;
-  impulseAmount: number;
-  isRollingComplete: boolean;
-  isZoomingOut: boolean;
-  isSpinning: boolean;
-  isScrolling: boolean;
-  setIsScrolling: (newState: boolean) => any;
-  /** if a property in the store is animating e.g. scale, can turn things on/off */
-  isPropertyAnimating: boolean;
-  isInfoOverlayVisible: boolean;
-  scrollTopPct: number;
-  animationStep: number;
-  scrollY: number;
-  setScrollY: (newState: number) => any;
-  setScrollTopPct: (newState: number) => any;
-  setAnimationStep: (newState: number) => any;
-  set: (newState: any) => any;
-};
-
-// zustand https://github.com/pmndrs/zustand
-// with typescript https://react-tracked.js.org/docs/tutorial-zustand-01/
-export const useStore = create<GlobalStateType>(
-  (set): GlobalStateType => ({
-    isRollingDie: false,
-    impulseAmount: 10,
-    isRollingComplete: false,
-    isZoomingOut: false,
-    isSpinning: false,
-    isScrolling: false,
-    setIsScrolling: (val) => set({ isScrolling: val }),
-    isZoomed: false,
-    scrollY: 0,
-    setScrollY: (num) => set({ scrollY: num }),
-    isPropertyAnimating: false,
-    isInfoOverlayVisible: false,
-    scrollTopPct: 0,
-    setScrollTopPct: (num) => set({ scrollTopPct: num }),
-    animationStep: 0,
-    setAnimationStep: (num) => set({ animationStep: num }),
-    set: (newState) => set((state) => ({ ...state, ...newState })),
-  })
+export const isRollingDieAtom = atom<boolean>(false);
+export const impulseAmountAtom = atom<number>(10);
+export const isRollingCompleteAtom = atom<boolean>(false);
+export const isZoomingOutAtom = atom<boolean>(false);
+export const isSpinningAtom = atom<boolean>(false);
+export const isScrollingAtom = atom<boolean>(false);
+export const isScrollableAtom = atom<boolean>(true);
+export const isPropertyAnimatingAtom = atom<boolean>(false);
+export const isInfoOverlayVisibleAtom = atomWithLocalStorage(
+  "store:isInfoOverlayVisible",
+  false
 );
+export const scrollTopPctAtom = atom<number>(0);
+export const scrollYAtom = atom<number>(0);
 
+export const animationStepAtom = atomWithLocalStorage("store:animationStep", 0);
 export function useAnimationStep() {
-  return useStore((s) => s.animationStep);
+  return useAtom(animationStepAtom)[0];
 }
+
+export const isZoomedAtom = atom<boolean>(false);
 
 export function useIsZoomed() {
-  const animationStep = useAnimationStep();
+  const [animationStep] = useAtom(animationStepAtom);
   return animationStep > 1;
 }
 export function useIsSpinning() {
   const isZoomed = useIsZoomed();
-  const isRollingDie = useStore((s) => s.isRollingDie);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
   return !isZoomed && !isRollingDie;
 }
 
 export function useIsZoomedCamera() {
-  const isRollingDie = useStore((s) => s.isRollingDie);
-  const isRollingComplete = useStore((s) => s.isRollingComplete);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
+  const [isRollingComplete] = useAtom(isRollingCompleteAtom);
   return isRollingDie && isRollingComplete;
+}
+
+//  jotai with localstorage
+// const strAtom = atom(localStorage.getItem("myKey") ?? "foo");
+
+// const strAtomWithPersistence = atom(
+//   (get) => get(strAtom),
+//   (get, set, newStr) => {
+//     set(strAtom, newStr);
+//     localStorage.setItem("myKey", newStr);
+//   }
+// );
+
+// https://docs.pmnd.rs/jotai/guides/persistence
+function atomWithLocalStorage<T>(key, initialValue: T) {
+  const getInitialValue = (): T => {
+    const item = localStorage.getItem(key);
+    if (item !== null) {
+      return JSON.parse(item);
+    }
+    return initialValue;
+  };
+  const baseAtom = atom<T>(getInitialValue());
+  const derivedAtom = atom(
+    (get) => get(baseAtom),
+    (get, set, update) => {
+      const nextValue =
+        typeof update === "function" ? update(get(baseAtom)) : update;
+      set(baseAtom, nextValue);
+      localStorage.setItem(key, JSON.stringify(nextValue));
+    }
+  );
+  return derivedAtom;
 }

@@ -1,9 +1,10 @@
-import { useStore } from "./store/store";
+import { isScrollingAtom, scrollYAtom } from "./store/store";
 import { NUM_ANIMATION_STEPS } from "../utils/constants";
 import styled from "styled-components/macro";
 import { HEIGHT_MULTIPLIER } from "./ScrollHandler";
 import { animated, useSpring } from "@react-spring/web";
 import { useWindowSize } from "../utils/hooks";
+import { useAtom } from "jotai";
 const WIDTH_PX = 100;
 
 export function ScrollingOverlaySimple() {
@@ -12,8 +13,8 @@ export function ScrollingOverlaySimple() {
   const totalScrollableHeight = height * HEIGHT_MULTIPLIER;
   const numberIndicatorHeight =
     totalScrollableHeight / (NUM_ANIMATION_STEPS + 2);
-  const scrollY = useStore((s) => s.scrollY);
-  const isScrolling = useStore((s) => s.isScrolling);
+  const [scrollY] = useAtom(scrollYAtom);
+  const [isScrolling] = useAtom(isScrollingAtom);
 
   const translateY = 2 * numberIndicatorHeight - scrollY;
   const spring = useSpring({

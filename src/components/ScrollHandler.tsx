@@ -1,18 +1,23 @@
 import { useDrag } from "@use-gesture/react";
 import * as React from "react";
 import styled from "styled-components/macro";
-import { useStore } from "./store/store";
+import {
+  isRollingDieAtom,
+  isScrollingAtom,
+  scrollTopPctAtom,
+  scrollYAtom,
+} from "./store/store";
 import { CUSTOM_SCROLLBAR_CSS } from "../utils/cssSnippets";
 import { useInterval, useMount, useWindowSize } from "../utils/hooks";
+import { useAtom } from "jotai";
 
 export const HEIGHT_MULTIPLIER = 12;
 export default function ScrollHandler({ children }) {
-  // const set = useStore((s) => s.set);
   // const isScrollable = useIsScrollable();
   const windowSize = useWindowSize();
-  const setScrollY = useStore((s) => s.setScrollY);
-  const setScrollTopPct = useStore((s) => s.setScrollTopPct);
-  const isRollingDie = useStore((s) => s.isRollingDie);
+  const [, setScrollY] = useAtom(scrollYAtom);
+  const [, setScrollTopPct] = useAtom(scrollTopPctAtom);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
 
   const { bindDrag, ref: scrollRef } = useTrackIsScrolling();
 
@@ -103,7 +108,7 @@ const InvisibleScrollStyles = styled.div`
 `;
 
 function useTrackIsScrolling() {
-  const setIsScrolling = useStore((s) => s.setIsScrolling);
+  const [, setIsScrolling] = useAtom(isScrollingAtom);
   const timerRef = React.useRef(null as any);
   const ref = React.useRef(null as any);
 

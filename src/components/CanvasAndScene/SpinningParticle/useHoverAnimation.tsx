@@ -1,11 +1,12 @@
 import { useFrame } from "@react-three/fiber";
+import { useAtom } from "jotai";
 import { useRef } from "react";
-import { useIsZoomed, useStore } from "../../store/store";
+import { isRollingDieAtom, useIsZoomed } from "../../store/store";
 
 export function useHoverAnimation() {
   const ref = useRef(null as any);
   const izZoomed = useIsZoomed();
-  const isRollingDie = useStore((s) => s.isRollingDie);
+  const isRollingDie = useAtom(isRollingDieAtom);
   useFrame(({ clock }) => {
     if (!izZoomed) {
       return;

@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useSpring, animated } from "@react-spring/three";
-import { useIsZoomed, useStore } from "../../store/store";
+import {
+  isRollingDieAtom,
+  isScrollableAtom,
+  isSpinningAtom,
+  isZoomedAtom,
+  useIsZoomed,
+} from "../../store/store";
 import { useMount } from "../../../utils/hooks";
 import * as THREE from "three";
 import D20_STAR from "../../GLTFs/D20_star";
@@ -8,6 +14,7 @@ import { useControl } from "react-three-gui";
 import { useSpinObjects } from "./useSpinObjects";
 import { useHoverAnimation } from "./useHoverAnimation";
 import { useRollableDieCannon } from "./useRollableDieCannon";
+import { useAtom } from "jotai";
 
 export const SPEED_Y = 0.5;
 export const SPEED_X = 0.2;
@@ -94,20 +101,22 @@ export default function SpinningParticle() {
     setMounted(true);
   });
 
-  const handleZoomIn = () => set({ isZoomed: true });
+  const [, setIsZoomed] = useAtom(isZoomedAtom);
+  const handleZoomIn = () => setIsZoomed(true);
+  const [, setIsSpinning] = useAtom(isSpinningAtom);
 
-  const set = useStore((s) => s.set);
   useEffect(() => {
-    set({ isSpinning: !isZoomed });
-  }, [set, isZoomed]);
+    setIsSpinning(!isZoomed);
+  }, [isZoomed, setIsSpinning]);
 
-  const isRollingDie = useStore((s) => s.isRollingDie);
+  const isRollingDie = useAtom(isRollingDieAtom);
 
   const scale = !mounted ? 0 : !isZoomed || isRollingDie ? 1 : 4.5;
   // const scale = !mounted ? 0 : (!isZoomed || isRollingDie) ? 1 : 4.5;
   const scaleWireMesh = !isZoomed || isRollingDie ? 0.5 : 1;
 
   const [isWireframe, setIsWireframe] = useState(false);
+  const [, setIsScrollable] = useAtom(isScrollableAtom);
 
   const springConfigZoomedOut = { mass: 2, tension: 80, friction: 70 };
   const springonfigZoomedIn = { mass: 1, tension: 80, frction: 70 };
@@ -130,7 +139,7 @@ export default function SpinningParticle() {
     onRest: (spring) => {
       if (isD20Opaque) {
         setIsWireframe(true);
-        set({ isScrollable: true });
+        setIsScrollable(true);
       }
     },
   });

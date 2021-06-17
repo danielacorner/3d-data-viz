@@ -1,11 +1,18 @@
 import { useConvexPolyhedron } from "@react-three/cannon";
 import { useEffect, useMemo, useRef } from "react";
-import { useIsZoomed, useIsZoomedCamera, useStore } from "../../store/store";
+import {
+  impulseAmountAtom,
+  isRollingCompleteAtom,
+  isRollingDieAtom,
+  useIsZoomed,
+  useIsZoomedCamera,
+} from "../../store/store";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { CAMERA_POSITION_INITIAL, ROLL_TIME } from "../../../utils/constants";
 import { Geometry } from "three-stdlib";
 import { useMount } from "../../../utils/hooks";
+import { useAtom } from "jotai";
 
 const ZOOM_SPEED = 0.028;
 
@@ -13,13 +20,13 @@ const RADIUS = 1;
 const DETAIL = 0;
 
 export function useRollableDieCannon() {
-  const isRollingDie = useStore((s) => s.isRollingDie);
-  const isRollingComplete = useStore((s) => s.isRollingComplete);
-  const impulseAmount = useStore((s) => s.impulseAmount);
+  const [isRollingDie] = useAtom(isRollingDieAtom);
+  const [isRollingComplete, setIsRollingComplete] = useAtom(
+    isRollingCompleteAtom
+  );
+  const [impulseAmount] = useAtom(impulseAmountAtom);
   const isZoomedCamera = useIsZoomedCamera();
   const isZoomed = useIsZoomed();
-
-  const set = useStore((s) => s.set);
 
   const geo = useMemo(
     () => toConvexProps(new THREE.IcosahedronBufferGeometry(RADIUS, DETAIL)),
@@ -47,11 +54,8 @@ export function useRollableDieCannon() {
 
     let timer = null as number | null;
     if (isRollingDie) {
-      set({ isRollingComplete: false });
-      timer = window.setTimeout(
-        () => set({ isRollingComplete: true }),
-        ROLL_TIME
-      );
+      setIsRollingComplete(false);
+      timer = window.setTimeout(() => setIsRollingComplete(true), ROLL_TIME);
 
       const impulse = [
         Math.random() * impulseAmount - impulseAmount,

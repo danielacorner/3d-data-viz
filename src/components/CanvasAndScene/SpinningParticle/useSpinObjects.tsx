@@ -1,6 +1,11 @@
 import { useFrame } from "@react-three/fiber";
+import { useAtom } from "jotai";
 import React from "react";
-import { useIsZoomed, useStore } from "../../store/store";
+import {
+  isRollingDieAtom,
+  isZoomingOutAtom,
+  useIsZoomed,
+} from "../../store/store";
 import { useRotateWithScroll } from "../useRotateWithScroll";
 import {
   SPEED_Y,
@@ -15,13 +20,13 @@ export function useSpinObjects(
   ref5: React.MutableRefObject<any>
 ) {
   const isZoomed = useIsZoomed();
-  const isRollingDie = useStore((s) => s.isRollingDie);
+  const isRollingDie = useAtom(isRollingDieAtom);
   const d20Rotation = useRotateWithScroll();
 
   const rotationSpeed = !isZoomed ? 0.12 : 0.05;
 
   // manually detect when we just went from isZoomed to !isZoomed
-  const isZoomingOut = useStore((s) => s.isZoomingOut);
+  const isZoomingOut = useAtom(isZoomingOutAtom);
 
   const shouldResetRotation = isRollingDie;
 

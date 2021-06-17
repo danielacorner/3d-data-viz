@@ -1,10 +1,11 @@
 import styled from "styled-components/macro";
 import { useDetectGPU } from "@react-three/drei";
-import { useStore } from "./store/store";
+import { isInfoOverlayVisibleAtom } from "./store/store";
+import { useAtom } from "jotai";
 
 const Layout = ({ children }) => {
   const gpuInfo = useDetectGPU();
-  const isInfoOverlayVisible = useStore((s) => s.isInfoOverlayVisible);
+  const isInfoOverlayVisible = useAtom(isInfoOverlayVisibleAtom);
 
   return (
     <LayoutStyles>
