@@ -71,15 +71,15 @@ export default function CanvasAndScene() {
 
 function Scene() {
   const turbidity = useTurbidityByTimeOfDay();
-  const isZoomed = useIsZoomed();
   useResetCameraWhenZoomed();
   return (
     <>
-      {false && process.env.NODE_ENV === "development" ? (
+      <OrbitControls {...({} as any)} />
+      {/* {false && process.env.NODE_ENV === "development" ? (
         <OrbitControls {...({} as any)} />
       ) : !isZoomed ? (
         <DeviceOrientationOrbitControls />
-      ) : null}
+      ) : null} */}
       <Stars count={1000} />
       <Environment background={false} path={"/"} preset={"night"} />
       <Sky
