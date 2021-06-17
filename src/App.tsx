@@ -12,7 +12,7 @@ export default function App() {
   useDetectIsZoomingOut();
 
   return (
-    <ErrorBoundary fallback={"oh no!"}>
+    <ErrorBoundary component={<div>❌ oh no!</div>}>
       <Layout>
         {/* <ScrollHandler> */}
         <CanvasAndScene />

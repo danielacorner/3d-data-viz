@@ -1,7 +1,7 @@
 import styled from "styled-components/macro";
 import { InfoButton } from "./components/controls/InfoButton";
 import { AudioSoundButton } from "./components/controls/AudioSoundButton";
-import { RollTheDieButton } from "./components/controls/RollTheDieButton";
+import { ResetPositionButton } from "./components/controls/ResetPositionButton";
 import { GithubButton } from "./components/controls/GithubButton";
 import { getTimeOfDay } from "./utils/timeUtils";
 
@@ -10,17 +10,17 @@ export function CornerButtons() {
 
   return (
     <CornerButtonsStyles {...{ isDaytime }}>
+      <div className="btn btnSoundWrapper top left">
+        <AudioSoundButton />
+      </div>
+      <div className="btn btnRollWrapper top right">
+        <ResetPositionButton />
+      </div>
       <div className="btn btnInfoWrapper bottom left">
         <InfoButton />
       </div>
       <div className="btn btnGithubWrapper bottom right">
         <GithubButton />
-      </div>
-      <div className="btn btnSoundWrapper top left">
-        <AudioSoundButton />
-      </div>
-      <div className="btn btnRollWrapper top right">
-        <RollTheDieButton />
       </div>
     </CornerButtonsStyles>
   );

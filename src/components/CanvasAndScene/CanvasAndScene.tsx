@@ -11,10 +11,7 @@ import {
 } from "@react-three/drei";
 import Youtubes from "../Youtubes";
 import { Lighting } from "../Lighting/Lighting";
-import { Debug } from "@react-three/cannon";
-import SpinScene from "../SpinScene";
 import { Controls } from "react-three-gui";
-import { DeviceOrientationOrbitControls } from "./DeviceOrientationOrbitControls";
 import {
   isInfoOverlayVisibleAtom,
   isRollingCompleteAtom,
@@ -125,17 +122,17 @@ function useResetCameraWhenZoomed() {
   useFrame(() => {
     if (isResettingCameraPosition) {
       const delta = {
-        x: INITIAL_CAMERA_POSITION.X - camera.position.x,
-        y: INITIAL_CAMERA_POSITION.Y - camera.position.y,
-        z: INITIAL_CAMERA_POSITION.Z - camera.position.z,
+        x: INITIAL_CAMERA_POSITION.x - camera.position.x,
+        y: INITIAL_CAMERA_POSITION.y - camera.position.y,
+        z: INITIAL_CAMERA_POSITION.z - camera.position.z,
       };
 
       camera.position.x =
-        INITIAL_CAMERA_POSITION.X - delta.x * (1 - ANIMATION_SPEED);
+        INITIAL_CAMERA_POSITION.x - delta.x * (1 - ANIMATION_SPEED);
       camera.position.y =
-        INITIAL_CAMERA_POSITION.Y - delta.y * (1 - ANIMATION_SPEED);
+        INITIAL_CAMERA_POSITION.y - delta.y * (1 - ANIMATION_SPEED);
       camera.position.z =
-        INITIAL_CAMERA_POSITION.Z - delta.z * (1 - ANIMATION_SPEED);
+        INITIAL_CAMERA_POSITION.z - delta.z * (1 - ANIMATION_SPEED);
 
       camera.lookAt(0, 0, 0);
     }
@@ -145,10 +142,10 @@ function useResetCameraWhenZoomed() {
 export const SECONDS_IN_DAY = 24 * 60 * 60;
 export const TURBIDITY = { max: -50, min: 100 };
 
-function Debugger({ children }) {
-  return process.env.NODE_ENV === "development" ? (
-    <Debug color="black">{children}</Debug>
-  ) : (
-    <>{children}</>
-  );
-}
+// function Debugger({ children }) {
+//   return process.env.NODE_ENV === "development" ? (
+//     <Debug color="black">{children}</Debug>
+//   ) : (
+//     <>{children}</>
+//   );
+// }

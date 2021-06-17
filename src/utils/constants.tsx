@@ -75,6 +75,6 @@ export const ROTATION_STEPS = ROTATION_STEPS_DEG.map((xyz) =>
 
 export const NUM_ANIMATION_STEPS = ROTATION_STEPS_DEG.length + 1; // 1 extra step = starting position
 
-export const INITIAL_CAMERA_POSITION = { X: 0, Y: 0, Z: 15 };
+export const INITIAL_CAMERA_POSITION = { x: 0, y: 0, z: 15 };
 
 export const ROLL_TIME = 3.5 * 1000;

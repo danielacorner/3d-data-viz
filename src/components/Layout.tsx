@@ -2,6 +2,7 @@ import styled from "styled-components/macro";
 import { useDetectGPU } from "@react-three/drei";
 import { isInfoOverlayVisibleAtom } from "./store/store";
 import { useAtom } from "jotai";
+export const DISABLE_HOVER_CLASS = "disable-hover";
 
 const Layout = ({ children }) => {
   const gpuInfo = useDetectGPU();
@@ -29,6 +30,9 @@ const LayoutStyles = styled.main`
     top: 64px;
     left: 0px;
     width: calc(100vw - 16px);
+  }
+  .${DISABLE_HOVER_CLASS} {
+    pointer-events: none;
   }
 `;
 
