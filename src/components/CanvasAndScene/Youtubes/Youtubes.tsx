@@ -1,8 +1,6 @@
 import { Billboard, Html } from "@react-three/drei";
-import { useAtom } from "jotai";
 import ReactPlayer from "react-player";
-import { lookAtTargetAtom } from "../../../store/store";
-import { INITIAL_CAMERA_POSITION } from "../../../utils/constants";
+import { CAMERA_DISTANCE_FROM_PLAYER } from "../../../utils/constants";
 import { useAnimateCameraPositionTo } from "../../../utils/useAnimateCameraPositionTo";
 
 const PLAYER_DIMENSIONS = [2, 1, 0.1];
@@ -39,12 +37,14 @@ function YoutubePlayer({
 }) {
   const { animateCameraPositionTo } = useAnimateCameraPositionTo(position);
 
-  const viewingPosition = [position[0], position[1], position[2] + 5];
-
-  const [, setLookAtTarget] = useAtom(lookAtTargetAtom);
+  const viewingPosition = [
+    position[0],
+    position[1],
+    position[2] + CAMERA_DISTANCE_FROM_PLAYER,
+  ];
 
   const handleAnimateToViewingPosition = () => {
-    setLookAtTarget(position);
+    // setLookAtTarget(position);
     animateCameraPositionTo(viewingPosition);
   };
 

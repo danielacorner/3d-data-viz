@@ -78,3 +78,5 @@ export const NUM_ANIMATION_STEPS = ROTATION_STEPS_DEG.length + 1; // 1 extra ste
 export const INITIAL_CAMERA_POSITION = { x: 0, y: 0, z: 15 };
 
 export const ROLL_TIME = 3.5 * 1000;
+
+export const CAMERA_DISTANCE_FROM_PLAYER = 5;

@@ -5,6 +5,7 @@ import isEqual from "lodash.isequal";
 import { usePrevious } from "./hooks";
 import { useAtom } from "jotai";
 import { isCameraAnimatingAtom, lookAtTargetAtom } from "../store/store";
+import { CAMERA_DISTANCE_FROM_PLAYER } from "./constants";
 
 export function useAnimateCameraPositionTo(
   lookAtPosition: [number, number, number]
@@ -41,21 +42,28 @@ export function useAnimateCameraPositionTo(
     }
   }, [camera, isCameraAnimating, lookAtPosition]);
 
+  const [, setLookAtTarget] = useAtom(lookAtTargetAtom);
+
   useSpring({
     from: {
-      position: prevCameraPosition,
+      camPosition: prevCameraPosition,
     },
     to: {
-      position: nextCameraPosition,
+      camPosition: nextCameraPosition,
     },
     config: { mass: 1, tension: 100, friction: 20, clamp: false },
     onRest: () => {
       // stop the animation
       setIsCameraAnimating(false);
     },
-    onChange: ({ value: { position } }) => {
+    onChange: ({ value: { camPosition } }) => {
       if (isCameraAnimating) {
-        camera.position.set(...position);
+        camera.position.set(...camPosition);
+        setLookAtTarget([
+          camPosition[0],
+          camPosition[1],
+          camPosition[2] - CAMERA_DISTANCE_FROM_PLAYER,
+        ]);
       }
     },
   });
