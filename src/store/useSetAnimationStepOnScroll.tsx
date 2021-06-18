@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
-import { NUM_ANIMATION_STEPS } from "../../utils/constants";
+import { NUM_ANIMATION_STEPS } from "../utils/constants";
 import { animationStepAtom, scrollTopPctAtom } from "./store";
 
 export function useSetAnimationStepOnScroll() {

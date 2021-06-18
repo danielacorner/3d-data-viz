@@ -1,6 +1,6 @@
 import styled from "styled-components/macro";
 import { useDetectGPU } from "@react-three/drei";
-import { isInfoOverlayVisibleAtom } from "./store/store";
+import { isInfoOverlayVisibleAtom } from "../store/store";
 import { useAtom } from "jotai";
 export const DISABLE_HOVER_CLASS = "disable-hover";
 

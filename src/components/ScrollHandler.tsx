@@ -6,7 +6,7 @@ import {
   isScrollingAtom,
   scrollTopPctAtom,
   scrollYAtom,
-} from "./store/store";
+} from "../store/store";
 import { CUSTOM_SCROLLBAR_CSS } from "../utils/cssSnippets";
 import { useInterval, useMount, useWindowSize } from "../utils/hooks";
 import { useAtom } from "jotai";

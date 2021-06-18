@@ -1,4 +1,4 @@
-import { isScrollingAtom, scrollYAtom } from "./store/store";
+import { isScrollingAtom, scrollYAtom } from "../store/store";
 import { NUM_ANIMATION_STEPS } from "../utils/constants";
 import styled from "styled-components/macro";
 import { HEIGHT_MULTIPLIER } from "./ScrollHandler";

@@ -6,7 +6,7 @@ import {
   isRollingCompleteAtom,
   isRollingDieAtom,
   useIsZoomed,
-} from "../store/store";
+} from "../../store/store";
 import RGBLights from "./RGBLights";
 import { useControl } from "react-three-gui";
 import { useAtom } from "jotai";

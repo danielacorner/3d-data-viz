@@ -5,7 +5,7 @@ import {
   isRollingDieAtom,
   isZoomingOutAtom,
   useIsZoomed,
-} from "../../store/store";
+} from "../../../store/store";
 import { useRotateWithScroll } from "../useRotateWithScroll";
 import {
   SPEED_Y,

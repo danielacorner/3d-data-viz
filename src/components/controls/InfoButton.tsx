@@ -1,4 +1,4 @@
-import { isInfoOverlayVisibleAtom } from "../store/store";
+import { isInfoOverlayVisibleAtom } from "../../store/store";
 import { Info } from "@material-ui/icons";
 import { IconButton, Tooltip } from "@material-ui/core";
 import styled from "styled-components/macro";

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useIsSpinning } from "./store/store";
+import { useIsSpinning } from "../store/store";
 
 // const SPEED_X = 0.2;
 const SPEED_Y = 0.1;

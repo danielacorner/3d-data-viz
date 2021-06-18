@@ -6,7 +6,7 @@ import {
   isRollingDieAtom,
   useIsZoomed,
   useIsZoomedCamera,
-} from "../../store/store";
+} from "../../../store/store";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { CAMERA_POSITION_INITIAL, ROLL_TIME } from "../../../utils/constants";

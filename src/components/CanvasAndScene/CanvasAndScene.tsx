@@ -9,16 +9,18 @@ import {
   Stars,
   Stats,
 } from "@react-three/drei";
-import Youtubes from "../Youtubes";
+import Youtubes from "./Youtubes/Youtubes";
 import { Lighting } from "../Lighting/Lighting";
 import { Controls } from "react-three-gui";
 import {
+  isCameraAnimatingAtom,
   isInfoOverlayVisibleAtom,
   isRollingCompleteAtom,
   isRollingDieAtom,
+  lookAtTargetAtom,
   resetPositionKeyAtom,
   useIsZoomed,
-} from "../store/store";
+} from "../../store/store";
 import { useFrame, Canvas } from "@react-three/fiber";
 import { ErrorBoundary } from "../ErrorBoundary";
 import {
@@ -71,9 +73,15 @@ function Scene() {
   const turbidity = useTurbidityByTimeOfDay();
   useResetCameraWhenZoomed();
   useResetCameraOnResetPositionButtonClick();
+  const [isCameraAnimating] = useAtom(isCameraAnimatingAtom);
+  const [lookAtTarget] = useAtom(lookAtTargetAtom);
   return (
     <>
-      <OrbitControls {...({} as any)} />
+      <OrbitControls
+        enabled={!isCameraAnimating}
+        target={lookAtTarget}
+        {...({} as any)}
+      />
       {/* {false && process.env.NODE_ENV === "development" ? (
         <OrbitControls {...({} as any)} />
       ) : !isZoomed ? (
@@ -168,7 +176,7 @@ function useResetCameraPosition(isResetting: boolean) {
       camera.position.z =
         INITIAL_CAMERA_POSITION.z - delta.z * (1 - ANIMATION_SPEED);
 
-      camera.lookAt(0, 0, 0);
+      // camera.lookAt(0, 0, 0);
     }
   });
 }

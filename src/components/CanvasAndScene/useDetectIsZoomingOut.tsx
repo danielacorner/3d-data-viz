@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { usePrevious } from "../../utils/hooks";
-import { isZoomingOutAtom, useIsZoomed } from "../store/store";
+import { isZoomingOutAtom, useIsZoomed } from "../../store/store";
 
 /** detect whether we're zooming out (i.e. we're going back to animation step 0 from step >= 1, animating/transparent) */
 export default function useDetectIsZoomingOut() {

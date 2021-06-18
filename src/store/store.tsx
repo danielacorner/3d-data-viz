@@ -6,6 +6,8 @@ import { atom, useAtom } from "jotai";
 
 export const resetPositionKeyAtom = atom<number>(0);
 export const isRollingDieAtom = atom<boolean>(false);
+export const isCameraAnimatingAtom = atom<boolean>(false);
+export const lookAtTargetAtom = atom<[number, number, number]>([0, 0, 0]);
 export const impulseAmountAtom = atom<number>(10);
 export const isRollingCompleteAtom = atom<boolean>(false);
 export const isZoomingOutAtom = atom<boolean>(false);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAnimationStep } from "../store/store";
+import { useAnimationStep } from "../../store/store";
 import { INITIAL_ROTATION, ROTATION_STEPS } from "../../utils/constants";
 import isEqual from "lodash.isequal";
 // import * as THREE from "three";

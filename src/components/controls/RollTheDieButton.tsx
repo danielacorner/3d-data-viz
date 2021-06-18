@@ -2,7 +2,7 @@ import { Casino, Undo } from "@material-ui/icons";
 import { IconButton, Tooltip } from "@material-ui/core";
 import styled from "styled-components/macro";
 import { useEffect, useState } from "react";
-import { isRollingCompleteAtom, isRollingDieAtom } from "../store/store";
+import { isRollingCompleteAtom, isRollingDieAtom } from "../../store/store";
 import { animated, useSpring } from "react-spring";
 import { ROLL_TIME } from "../../utils/constants";
 import { useAtom } from "jotai";

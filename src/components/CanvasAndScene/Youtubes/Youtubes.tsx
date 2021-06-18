@@ -1,5 +1,6 @@
 import { Billboard, Html } from "@react-three/drei";
 import ReactPlayer from "react-player";
+import { useAnimateCameraPositionTo } from "../../../utils/useAnimateCameraPositionTo";
 
 const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
@@ -16,7 +17,7 @@ const Youtubes = () => {
   return (
     <mesh>
       {players.map(({ position, url }) => (
-        <Player {...{ position, url }} />
+        <YoutubePlayer key={JSON.stringify(position)} {...{ position, url }} />
       ))}
     </mesh>
   );
@@ -26,16 +27,17 @@ export default Youtubes;
 
 const PLAYER_SCALE = 0.2;
 
-function Player({
+function YoutubePlayer({
   position,
   url,
 }: {
   position: [number, number, number];
   url: string;
 }) {
+  const { animateCameraPositionTo, lookAtRef } = useAnimateCameraPositionTo();
   // const [isPlaying, setIsPlaying] = useState(false);
   return (
-    <Billboard position={position} {...({} as any)}>
+    <Billboard ref={lookAtRef} position={position} {...({} as any)}>
       <boxBufferGeometry args={PLAYER_DIMENSIONS} />
       <meshBasicMaterial color="white" />
 
@@ -45,7 +47,6 @@ function Player({
         transform={true}
         sprite={false}
         style={{
-          pointerEvents: "none",
           width: 530 * PLAYER_SCALE,
           height: 300 * PLAYER_SCALE,
         }}
@@ -59,6 +60,9 @@ function Player({
             transform: `scale(${PLAYER_SCALE})`,
             transformOrigin: "top left",
           }}
+          onClickPreview={() =>
+            animateCameraPositionTo([position[0], position[1], position[2] - 5])
+          }
           // playing={isPlaying}
           light={true}
           url={url}
@@ -83,10 +87,10 @@ const RELATIVE_DOME_POSITIONS = sidesZ.reduce(
     [-SIDE_DISTANCE, 0, s], // left
     [0, SIDE_DISTANCE, s], // top
     [0, -SIDE_DISTANCE, s], // bottom
-    // [d, d, s], // top right
-    // [-d, d, s], // top left
-    // [d, -d, s], // bottom right
-    // [-d, -d, s], // bottom left
+    // [SIDE_DISTANCE, SIDE_DISTANCE, s], // top right
+    // [-SIDE_DISTANCE, SIDE_DISTANCE, s], // top left
+    // [SIDE_DISTANCE, -SIDE_DISTANCE, s], // bottom right
+    // [-SIDE_DISTANCE, -SIDE_DISTANCE, s], // bottom left
   ],
   [] as number[][]
 );

@@ -6,7 +6,7 @@ import {
   isSpinningAtom,
   isZoomedAtom,
   useIsZoomed,
-} from "../../store/store";
+} from "../../../store/store";
 import { useMount } from "../../../utils/hooks";
 import * as THREE from "three";
 import D20_STAR from "../../GLTFs/D20_star";
