@@ -35,7 +35,9 @@ function YoutubePlayer({
   url: string;
 }) {
   const { animateCameraPositionTo, lookAtRef } = useAnimateCameraPositionTo();
-  // const [isPlaying, setIsPlaying] = useState(false);
+
+  const viewingPosition = [position[0], position[1], position[2] + 5];
+
   return (
     <Billboard ref={lookAtRef} position={position} {...({} as any)}>
       <boxBufferGeometry args={PLAYER_DIMENSIONS} />
@@ -54,15 +56,14 @@ function YoutubePlayer({
         {/* TODO: only show one player at a time, the rest are preview images */}
         {/* https://www.npmjs.com/package/react-player */}
         <ReactPlayer
+          onClick={() => animateCameraPositionTo(viewingPosition)}
+          onPlay={() => animateCameraPositionTo(viewingPosition)}
           width={530}
           height={300}
           style={{
             transform: `scale(${PLAYER_SCALE})`,
             transformOrigin: "top left",
           }}
-          onClickPreview={() =>
-            animateCameraPositionTo([position[0], position[1], position[2] - 5])
-          }
           // playing={isPlaying}
           light={true}
           url={url}

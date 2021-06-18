@@ -34,6 +34,16 @@ export function useAnimateCameraPositionTo() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nextCameraPosition]);
 
+  // change the OrbitControls target on click
+  useEffect(() => {
+    const pos = lookAtRef.current?.position;
+    if (isCameraAnimating && pos) {
+      const newLookAtTarget = [pos.x, pos.y, pos.z] as [number, number, number];
+      camera.lookAt(...newLookAtTarget);
+      setLookAtTarget(newLookAtTarget);
+    }
+  }, [camera, isCameraAnimating, setLookAtTarget]);
+
   useSpring({
     from: {
       position: prevCameraPosition,
@@ -41,7 +51,7 @@ export function useAnimateCameraPositionTo() {
     to: {
       position: nextCameraPosition,
     },
-    config: { mass: 10, tension: 100, friction: 20, clamp: true },
+    config: { mass: 1, tension: 100, friction: 20, clamp: false },
     onRest: () => {
       // stop the animation
       setIsCameraAnimating(false);
@@ -49,16 +59,6 @@ export function useAnimateCameraPositionTo() {
     onChange: ({ value: { position } }) => {
       if (isCameraAnimating) {
         camera.position.set(...position);
-
-        const pos = lookAtRef.current?.position;
-        if (pos) {
-          const newLookAtTarget = [pos.x, pos.y, pos.z] as [
-            number,
-            number,
-            number
-          ];
-          setLookAtTarget(newLookAtTarget);
-        }
       }
     },
   });
