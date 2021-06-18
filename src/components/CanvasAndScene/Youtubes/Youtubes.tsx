@@ -1,5 +1,8 @@
 import { Billboard, Html } from "@react-three/drei";
+import { useAtom } from "jotai";
 import ReactPlayer from "react-player";
+import { lookAtTargetAtom } from "../../../store/store";
+import { INITIAL_CAMERA_POSITION } from "../../../utils/constants";
 import { useAnimateCameraPositionTo } from "../../../utils/useAnimateCameraPositionTo";
 
 const PLAYER_DIMENSIONS = [2, 1, 0.1];
@@ -34,15 +37,21 @@ function YoutubePlayer({
   position: [number, number, number];
   url: string;
 }) {
-  const { animateCameraPositionTo, lookAtRef } = useAnimateCameraPositionTo();
+  const { animateCameraPositionTo } = useAnimateCameraPositionTo(position);
 
   const viewingPosition = [position[0], position[1], position[2] + 5];
 
+  const [, setLookAtTarget] = useAtom(lookAtTargetAtom);
+
+  const handleAnimateToViewingPosition = () => {
+    setLookAtTarget(position);
+    animateCameraPositionTo(viewingPosition);
+  };
+
   return (
-    <Billboard ref={lookAtRef} position={position} {...({} as any)}>
+    <Billboard position={position} {...({} as any)}>
       <boxBufferGeometry args={PLAYER_DIMENSIONS} />
       <meshBasicMaterial color="white" />
-
       {/* https://github.com/pmndrs/drei#html */}
       <Html
         className="react-player-wrapper"
@@ -56,8 +65,7 @@ function YoutubePlayer({
         {/* TODO: only show one player at a time, the rest are preview images */}
         {/* https://www.npmjs.com/package/react-player */}
         <ReactPlayer
-          onClick={() => animateCameraPositionTo(viewingPosition)}
-          onPlay={() => animateCameraPositionTo(viewingPosition)}
+          onClickPreview={handleAnimateToViewingPosition}
           width={530}
           height={300}
           style={{

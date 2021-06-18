@@ -1,14 +1,15 @@
 import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSpring } from "@react-spring/three";
 import isEqual from "lodash.isequal";
 import { usePrevious } from "./hooks";
 import { useAtom } from "jotai";
 import { isCameraAnimatingAtom, lookAtTargetAtom } from "../store/store";
 
-export function useAnimateCameraPositionTo() {
+export function useAnimateCameraPositionTo(
+  lookAtPosition: [number, number, number]
+) {
   // look at this element during animation
-  const lookAtRef = useRef(null as any);
 
   const { camera } = useThree();
   const cameraPositionArr: [number, number, number] = [
@@ -21,7 +22,6 @@ export function useAnimateCameraPositionTo() {
   const [isCameraAnimating, setIsCameraAnimating] = useAtom(
     isCameraAnimatingAtom
   );
-  const [, setLookAtTarget] = useAtom(lookAtTargetAtom);
 
   const prevCameraPosition = usePrevious(nextCameraPosition);
 
@@ -36,13 +36,10 @@ export function useAnimateCameraPositionTo() {
 
   // change the OrbitControls target on click
   useEffect(() => {
-    const pos = lookAtRef.current?.position;
-    if (isCameraAnimating && pos) {
-      const newLookAtTarget = [pos.x, pos.y, pos.z] as [number, number, number];
-      camera.lookAt(...newLookAtTarget);
-      setLookAtTarget(newLookAtTarget);
+    if (isCameraAnimating && lookAtPosition) {
+      camera.lookAt(...lookAtPosition);
     }
-  }, [camera, isCameraAnimating, setLookAtTarget]);
+  }, [camera, isCameraAnimating, lookAtPosition]);
 
   useSpring({
     from: {
@@ -65,6 +62,5 @@ export function useAnimateCameraPositionTo() {
 
   return {
     animateCameraPositionTo: (newPos) => setNextCameraPosition(newPos),
-    lookAtRef,
   };
 }
