@@ -4,6 +4,8 @@ import { useSetAnimationStepOnScroll } from "./store/useSetAnimationStepOnScroll
 import ErrorBoundary from "./components/ErrorBoundary";
 import useDetectIsZoomingOut from "./components/CanvasAndScene/useDetectIsZoomingOut";
 import { CornerButtons } from "./CornerButtons";
+import { ReactQueryDevtools } from "react-query/devtools";
+import QueryClientProviderWithClient from "./components/QueryClientProviderWithClient";
 
 export default function App() {
   useSetAnimationStepOnScroll();
@@ -17,6 +19,9 @@ export default function App() {
         {/* </ScrollHandler> */}
         {/* <ScrollingOverlaySimple /> */}
         <CornerButtons />
+        <QueryClientProviderWithClient>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProviderWithClient>
       </Layout>
     </ErrorBoundary>
   );

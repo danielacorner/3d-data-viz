@@ -82,4 +82,4 @@ function Scene() {
 }
 
 export const SECONDS_IN_DAY = 24 * 60 * 60;
-export const TURBIDITY = { max: -50, min: 100 };
+export const TURBIDITY = { max: 0, min: 100 };

@@ -3,10 +3,7 @@ import ReactPlayer from "react-player";
 import { CAMERA_DISTANCE_FROM_PLAYER } from "../../../utils/constants";
 import { useAnimateCameraPositionTo } from "../../../utils/useAnimateCameraPositionTo";
 import { useFetchYoutubeUrls } from "./useFetchYoutubeUrls";
-import { QueryClient, QueryClientProvider } from "react-query";
 import ErrorBoundary from "../../../components/ErrorBoundary";
-
-const queryClient = new QueryClient();
 
 const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
