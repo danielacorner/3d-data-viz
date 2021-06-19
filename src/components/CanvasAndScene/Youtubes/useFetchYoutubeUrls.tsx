@@ -1,10 +1,16 @@
 import { useQuery } from "react-query";
 import { YoutubeResponseType } from "./youtubeResponseExample";
 
-export function useFetchYoutubeUrls({ enabled }) {
-  const relatedToVideoId = "Ks-_Mh1QhMc";
+const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
-  const apiKey = process.env.REACT_APP_YOUTUBE_API_KEY;
+export function useFetchYoutubeUrls({
+  enabled,
+  numUrlsToFetch,
+}: {
+  enabled: boolean;
+  numUrlsToFetch: number;
+}) {
+  const relatedToVideoId = "Ks-_Mh1QhMc";
 
   // https://react-query.tanstack.com/reference/useQuery
   const { isLoading, error, data } = useQuery<YoutubeResponseType, Error>(
@@ -13,7 +19,7 @@ export function useFetchYoutubeUrls({ enabled }) {
       // relatedToVideoId
       // https://developers.google.com/youtube/v3/docs/search/list
       fetch(
-        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=${relatedToVideoId}&type=video&key=${apiKey}`
+        `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=${numUrlsToFetch}&relatedToVideoId=${relatedToVideoId}&type=video&key=${API_KEY}`
       ).then((res) => res.json()),
     { refetchOnWindowFocus: false, enabled }
   );
@@ -23,7 +29,27 @@ export function useFetchYoutubeUrls({ enabled }) {
     error,
     data,
     youtubeUrls: data?.items.map(
-      (item) => `https://www.youtube.com/watch?v=${item.id}`
+      (item) => `https://www.youtube.com/watch?v=${item.id.videoId}`
     ),
   };
+}
+
+export function fetchYoutubeUrls({
+  numUrlsToFetch,
+}: {
+  numUrlsToFetch: number;
+}) {
+  const relatedToVideoId = "Ks-_Mh1QhMc";
+  // relatedToVideoId query
+  // https://developers.google.com/youtube/v3/docs/search/list
+  return fetch(
+    `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=${numUrlsToFetch}&relatedToVideoId=${relatedToVideoId}&type=video&key=${API_KEY}`
+  )
+    .then((res) => res.json())
+    .then((data) => ({
+      data,
+      youtubeUrls: data?.items.map(
+        (item) => `https://www.youtube.com/watch?v=${item.id.videoId}`
+      ),
+    }));
 }

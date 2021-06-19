@@ -3,6 +3,7 @@ import ReactPlayer from "react-player";
 import { CAMERA_DISTANCE_FROM_PLAYER } from "../../../utils/constants";
 import { useAnimateCameraPositionTo } from "../../../utils/useAnimateCameraPositionTo";
 import { PLAYER_DIMENSIONS } from "./Youtubes";
+import { CircularProgress } from "@material-ui/core";
 
 const PLAYER_SCALE = 0.2;
 export function YoutubePlayer({
@@ -12,7 +13,7 @@ export function YoutubePlayer({
   onClick,
 }: {
   position: [number, number, number];
-  url: string;
+  url: string | null;
   onClickAfterCameraMove?: Function;
   onClick?: () => void;
 }) {
@@ -50,18 +51,22 @@ export function YoutubePlayer({
       >
         {/* TODO: only show one player at a time, the rest are preview images */}
         {/* https://www.npmjs.com/package/react-player */}
-        <ReactPlayer
-          onClickPreview={handleClickPreview}
-          width={530}
-          height={300}
-          style={{
-            transform: `scale(${PLAYER_SCALE})`,
-            transformOrigin: "top left",
-          }}
-          // playing={isPlaying}
-          light={true}
-          url={url}
-        />
+        {url ? (
+          <ReactPlayer
+            onClickPreview={handleClickPreview}
+            width={530}
+            height={300}
+            style={{
+              transform: `scale(${PLAYER_SCALE})`,
+              transformOrigin: "top left",
+            }}
+            // playing={isPlaying}
+            light={true}
+            url={url}
+          />
+        ) : (
+          <CircularProgress />
+        )}
       </Html>
     </Billboard>
   );

@@ -1,5 +1,5 @@
 import { Html } from "@react-three/drei";
-import { useFetchYoutubeUrls } from "./useFetchYoutubeUrls";
+import { fetchYoutubeUrls } from "./useFetchYoutubeUrls";
 import ErrorBoundary from "../../../components/ErrorBoundary";
 import { useState } from "react";
 import { findAdjacentUnoccupiedPositionsTo } from "./youtubesUtils";
@@ -11,59 +11,71 @@ export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
 /** a field of youtubes, walk around to get recommendations based on the current video */
 const Youtubes = () => {
+  const initialYoutubeId = "aK4JSwhdcdE";
+  const initialYoutubeUrl = `https://www.youtube.com/watch?v=${initialYoutubeId}`;
+
   const [players, setPlayers] = useState(
     INITIAL_PLAYER_POSITIONS.map(
       (position) =>
         ({
-          url: "https://www.youtube.com/watch?v=aK4JSwhdcdE",
+          url: initialYoutubeUrl,
           position,
         } as PlayerType)
     )
   );
-
-  const enabled = true;
-  const { data, isLoading, error, youtubeUrls } = useFetchYoutubeUrls({
-    enabled,
-  });
-  console.log("🌟🚨 ~ useFetchYoutubeUrls ~ { isLoading, error, data }", {
-    isLoading,
-    error,
-    data,
-    youtubeUrls,
-  });
+  const [loadingPlayers, setLoadingPlayers] = useState([] as PlayerType[]);
 
   // TODO: store urls in LS,
   // TODO: populate adjacent players on click
-  const onPlayerClick = (position: [number, number, number]) => {
+  const onPlayerClick = async (position: [number, number, number]) => {
     const adjacentUnoccupiedPositions = findAdjacentUnoccupiedPositionsTo(
       position,
       players
     );
-    const adjacentPlayers = adjacentUnoccupiedPositions.map((position) => ({
-      url: "TODO",
-      position,
-    }));
+    console.log(
+      "🌟🚨 ~ onPlayerClick ~ adjacentUnoccupiedPositions.length",
+      adjacentUnoccupiedPositions.length
+    );
+
+    setLoadingPlayers(
+      adjacentUnoccupiedPositions.map((position, idx) => ({
+        url: null,
+        position,
+      }))
+    );
+
+    const { youtubeUrls } = await fetchYoutubeUrls({
+      numUrlsToFetch: adjacentUnoccupiedPositions.length,
+    });
+
+    const adjacentPlayers = adjacentUnoccupiedPositions.map(
+      (position, idx) => ({
+        url: youtubeUrls[idx],
+        position,
+      })
+    );
     setPlayers([...players, ...adjacentPlayers]);
+    setLoadingPlayers([]);
   };
 
   return (
     <ErrorBoundary component={<Html>❌ Youtubes</Html>}>
       <mesh>
-        {uniqBy(players, (player) => JSON.stringify(player.position)).map(
-          ({ position, url }) => (
-            <YoutubePlayer
-              key={JSON.stringify(position)}
-              {...{ position, url, onClick: () => onPlayerClick(position) }}
-            />
-          )
-        )}
+        {uniqBy([...players, ...loadingPlayers], (player) =>
+          JSON.stringify(player.position)
+        ).map(({ position, url }) => (
+          <YoutubePlayer
+            key={JSON.stringify(position)}
+            {...{ position, url, onClick: () => onPlayerClick(position) }}
+          />
+        ))}
       </mesh>
     </ErrorBoundary>
   );
 };
 
 export type PlayerType = {
-  url: string;
+  url: string | null;
   position: [number, number, number];
 };
 
