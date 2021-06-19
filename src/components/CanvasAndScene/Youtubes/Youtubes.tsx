@@ -2,6 +2,11 @@ import { Billboard, Html } from "@react-three/drei";
 import ReactPlayer from "react-player";
 import { CAMERA_DISTANCE_FROM_PLAYER } from "../../../utils/constants";
 import { useAnimateCameraPositionTo } from "../../../utils/useAnimateCameraPositionTo";
+import { useFetchYoutubeUrls } from "./useFetchYoutubeUrls";
+import { QueryClient, QueryClientProvider } from "react-query";
+import ErrorBoundary from "../../../components/ErrorBoundary";
+
+const queryClient = new QueryClient();
 
 const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
@@ -15,12 +20,25 @@ const Youtubes = () => {
     position,
   }));
 
+  const enabled = true;
+  const { data, isLoading, error } = useFetchYoutubeUrls({ enabled });
+  console.log("🌟🚨 ~ useFetchYoutubeUrls ~ { isLoading, error, data }", {
+    isLoading,
+    error,
+    data,
+  });
+
   return (
-    <mesh>
-      {players.map(({ position, url }) => (
-        <YoutubePlayer key={JSON.stringify(position)} {...{ position, url }} />
-      ))}
-    </mesh>
+    <ErrorBoundary component={<Html>❌ Youtubes</Html>}>
+      <mesh>
+        {players.map(({ position, url }) => (
+          <YoutubePlayer
+            key={JSON.stringify(position)}
+            {...{ position, url }}
+          />
+        ))}
+      </mesh>
+    </ErrorBoundary>
   );
 };
 
@@ -43,8 +61,7 @@ function YoutubePlayer({
     position[2] + CAMERA_DISTANCE_FROM_PLAYER,
   ];
 
-  const handleAnimateToViewingPosition = () => {
-    // setLookAtTarget(position);
+  const handleClickPreview = () => {
     animateCameraPositionTo(viewingPosition);
   };
 
@@ -65,7 +82,7 @@ function YoutubePlayer({
         {/* TODO: only show one player at a time, the rest are preview images */}
         {/* https://www.npmjs.com/package/react-player */}
         <ReactPlayer
-          onClickPreview={handleAnimateToViewingPosition}
+          onClickPreview={handleClickPreview}
           width={530}
           height={300}
           style={{

@@ -18,6 +18,7 @@ import { ErrorBoundary } from "../ErrorBoundary";
 import { CAMERA_POSITION_INITIAL } from "../../utils/constants";
 import { useTurbidityByTimeOfDay } from "./useTurbidityByTimeOfDay";
 import { useAtom } from "jotai";
+import QueryClientProviderWithClient from "../QueryClientProviderWithClient";
 
 const CONTROLLED = false;
 const Canv = CONTROLLED ? Controls.Canvas : Canvas;
@@ -43,7 +44,7 @@ export default function CanvasAndScene() {
           style={{ height: windowSize.height, width: windowSize.width }}
         >
           {/* <SpinScene> */}
-          <ErrorBoundary component={<Html>❌ Scene</Html>}>
+          <ErrorBoundary component={<Html>❌ CanvasAndScene</Html>}>
             <Scene />
             {isInfoOverlayVisible && <Stats className="fpsStats" />}
           </ErrorBoundary>
@@ -63,18 +64,20 @@ function Scene() {
   // const [isCameraAnimating] = useAtom(isCameraAnimatingAtom);
   const [lookAtTarget] = useAtom(lookAtTargetAtom);
   return (
-    <>
-      <OrbitControls target={lookAtTarget} {...({} as any)} />
-      <Stars count={1000} />
-      <Environment background={false} path={"/"} preset={"night"} />
-      <Sky
-        rayleigh={7}
-        mieCoefficient={0.1}
-        mieDirectionalG={1}
-        turbidity={turbidity}
-      />
-      <Youtubes />
-    </>
+    <QueryClientProviderWithClient>
+      <ErrorBoundary component={<Html>❌ Scene</Html>}>
+        <OrbitControls target={lookAtTarget} {...({} as any)} />
+        <Stars count={1000} />
+        <Environment background={false} path={"/"} preset={"night"} />
+        <Sky
+          rayleigh={7}
+          mieCoefficient={0.1}
+          mieDirectionalG={1}
+          turbidity={turbidity}
+        />
+        <Youtubes />
+      </ErrorBoundary>
+    </QueryClientProviderWithClient>
   );
 }
 

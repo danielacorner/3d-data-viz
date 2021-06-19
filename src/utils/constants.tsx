@@ -80,3 +80,5 @@ export const INITIAL_CAMERA_POSITION = { x: 0, y: 0, z: 15 };
 export const ROLL_TIME = 3.5 * 1000;
 
 export const CAMERA_DISTANCE_FROM_PLAYER = 5;
+
+export const IS_API_ENABLED = true;
