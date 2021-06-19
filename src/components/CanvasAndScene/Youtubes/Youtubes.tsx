@@ -5,6 +5,7 @@ import { useState } from "react";
 import { findAdjacentUnoccupiedPositionsTo } from "./youtubesUtils";
 import { YoutubePlayer } from "./YoutubePlayer";
 import { INITIAL_PLAYER_POSITIONS } from "../../../utils/constants";
+import { useMount } from "../../../utils/hooks";
 
 export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
@@ -12,18 +13,39 @@ export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
   const initialYoutubeUrl = `https://www.youtube.com/watch?v=${initialYoutubeId}`;
 
-  const [players, setPlayers] = useState(
-    INITIAL_PLAYER_POSITIONS.map(
-      (position) =>
-        ({
-          url: initialYoutubeUrl,
-          videoId: initialYoutubeId,
-          position,
-        } as PlayerType)
-    )
+  // start with a single loaded player
+  const [players, setPlayers] = useState<PlayerType[]>([
+    {
+      url: initialYoutubeUrl,
+      videoId: initialYoutubeId,
+      position: [0, 0, 0],
+    },
+  ]);
+  // start with dome of loading players around center player
+  const [loadingPlayers, setLoadingPlayers] = useState<PlayerType[]>(
+    INITIAL_PLAYER_POSITIONS.map((position) => ({
+      url: null,
+      videoId: null,
+      position,
+    }))
   );
 
-  const [loadingPlayers, setLoadingPlayers] = useState([] as PlayerType[]);
+  // on mount, fetch videos related to initialYoutubeId
+  useMount(() => {
+    (async () => {
+      const { youtubeUrls, youtubeIds } = await fetchYoutubeUrlsRelatedTo({
+        numUrlsToFetch: loadingPlayers.length,
+        relatedToVideoId: initialYoutubeId,
+      });
+      const adjacentPlayers = loadingPlayers.map(({ position }, idx) => ({
+        url: youtubeUrls[idx],
+        videoId: youtubeIds[idx],
+        position,
+      }));
+      setLoadingPlayers([]);
+      setPlayers([...players, ...adjacentPlayers]);
+    })();
+  });
 
   // TODO: store urls in LS,
   // on click, populate adjacent players with video urls
