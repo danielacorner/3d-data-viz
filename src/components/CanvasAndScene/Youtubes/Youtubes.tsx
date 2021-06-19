@@ -5,6 +5,7 @@ import { useState } from "react";
 import { findAdjacentUnoccupiedPositionsTo } from "./youtubesUtils";
 import { YoutubePlayer } from "./YoutubePlayer";
 import { INITIAL_PLAYER_POSITIONS } from "../../../utils/constants";
+import uniqBy from "lodash.uniqby";
 
 export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
@@ -48,12 +49,14 @@ const Youtubes = () => {
   return (
     <ErrorBoundary component={<Html>❌ Youtubes</Html>}>
       <mesh>
-        {players.map(({ position, url }) => (
-          <YoutubePlayer
-            key={JSON.stringify(position)}
-            {...{ position, url, onClick: () => onPlayerClick(position) }}
-          />
-        ))}
+        {uniqBy(players, (player) => JSON.stringify(player.position)).map(
+          ({ position, url }) => (
+            <YoutubePlayer
+              key={JSON.stringify(position)}
+              {...{ position, url, onClick: () => onPlayerClick(position) }}
+            />
+          )
+        )}
       </mesh>
     </ErrorBoundary>
   );
