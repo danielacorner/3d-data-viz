@@ -44,6 +44,10 @@ export function useAnimateCameraPositionTo(
 
   const [, setLookAtTarget] = useAtom(lookAtTargetAtom);
 
+  // allow user to set a callback after animation ends
+  const [afterAnimationCallbackFn, setAfterAnimationCallback] =
+    useState<Function | null>(null);
+
   useSpring({
     from: {
       camPosition: prevCameraPosition,
@@ -55,6 +59,11 @@ export function useAnimateCameraPositionTo(
     onRest: () => {
       // stop the animation
       setIsCameraAnimating(false);
+      if (afterAnimationCallbackFn) {
+        // fire each callback once, after the animation finishes
+        afterAnimationCallbackFn();
+        setAfterAnimationCallback(null);
+      }
     },
     onChange: ({ value: { camPosition } }) => {
       if (isCameraAnimating) {
@@ -69,6 +78,17 @@ export function useAnimateCameraPositionTo(
   });
 
   return {
-    animateCameraPositionTo: (newPos) => setNextCameraPosition(newPos),
+    animateCameraPositionTo: ({
+      position: newPos,
+      afterAnimationCallbackFn: callback,
+    }: {
+      position: [number, number, number];
+      afterAnimationCallbackFn?: Function;
+    }) => {
+      setNextCameraPosition(newPos);
+      if (callback) {
+        setAfterAnimationCallback(callback);
+      }
+    },
   };
 }

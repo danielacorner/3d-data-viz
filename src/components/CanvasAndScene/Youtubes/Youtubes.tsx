@@ -1,29 +1,49 @@
-import { Billboard, Html } from "@react-three/drei";
-import ReactPlayer from "react-player";
-import { CAMERA_DISTANCE_FROM_PLAYER } from "../../../utils/constants";
-import { useAnimateCameraPositionTo } from "../../../utils/useAnimateCameraPositionTo";
+import { Html } from "@react-three/drei";
 import { useFetchYoutubeUrls } from "./useFetchYoutubeUrls";
 import ErrorBoundary from "../../../components/ErrorBoundary";
+import { useState } from "react";
+import { findAdjacentUnoccupiedPositionsTo } from "./youtubesUtils";
+import { YoutubePlayer } from "./YoutubePlayer";
+import { INITIAL_PLAYER_POSITIONS } from "../../../utils/constants";
 
-const PLAYER_DIMENSIONS = [2, 1, 0.1];
+export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
 /** a field of youtubes, walk around to get recommendations based on the current video */
 const Youtubes = () => {
-  const playerPositions: [number, number, number][] = getDomeOfPositionsAround([
-    0, 0, 0,
-  ]);
-  const players = playerPositions.map((position) => ({
-    url: "https://www.youtube.com/watch?v=aK4JSwhdcdE",
-    position,
-  }));
+  const [players, setPlayers] = useState(
+    INITIAL_PLAYER_POSITIONS.map(
+      (position) =>
+        ({
+          url: "https://www.youtube.com/watch?v=aK4JSwhdcdE",
+          position,
+        } as PlayerType)
+    )
+  );
 
   const enabled = true;
-  const { data, isLoading, error } = useFetchYoutubeUrls({ enabled });
+  const { data, isLoading, error, youtubeUrls } = useFetchYoutubeUrls({
+    enabled,
+  });
   console.log("🌟🚨 ~ useFetchYoutubeUrls ~ { isLoading, error, data }", {
     isLoading,
     error,
     data,
+    youtubeUrls,
   });
+
+  // TODO: store urls in LS,
+  // TODO: populate adjacent players on click
+  const onPlayerClick = (position: [number, number, number]) => {
+    const adjacentUnoccupiedPositions = findAdjacentUnoccupiedPositionsTo(
+      position,
+      players
+    );
+    const adjacentPlayers = adjacentUnoccupiedPositions.map((position) => ({
+      url: "TODO",
+      position,
+    }));
+    setPlayers([...players, ...adjacentPlayers]);
+  };
 
   return (
     <ErrorBoundary component={<Html>❌ Youtubes</Html>}>
@@ -31,7 +51,7 @@ const Youtubes = () => {
         {players.map(({ position, url }) => (
           <YoutubePlayer
             key={JSON.stringify(position)}
-            {...{ position, url }}
+            {...{ position, url, onClick: () => onPlayerClick(position) }}
           />
         ))}
       </mesh>
@@ -39,89 +59,9 @@ const Youtubes = () => {
   );
 };
 
-export default Youtubes;
-
-const PLAYER_SCALE = 0.2;
-
-function YoutubePlayer({
-  position,
-  url,
-}: {
-  position: [number, number, number];
+export type PlayerType = {
   url: string;
-}) {
-  const { animateCameraPositionTo } = useAnimateCameraPositionTo(position);
+  position: [number, number, number];
+};
 
-  const viewingPosition = [
-    position[0],
-    position[1],
-    position[2] + CAMERA_DISTANCE_FROM_PLAYER,
-  ];
-
-  const handleClickPreview = () => {
-    animateCameraPositionTo(viewingPosition);
-  };
-
-  return (
-    <Billboard position={position} {...({} as any)}>
-      <boxBufferGeometry args={PLAYER_DIMENSIONS} />
-      <meshBasicMaterial color="white" />
-      {/* https://github.com/pmndrs/drei#html */}
-      <Html
-        className="react-player-wrapper"
-        transform={true}
-        sprite={false}
-        style={{
-          width: 530 * PLAYER_SCALE,
-          height: 300 * PLAYER_SCALE,
-        }}
-      >
-        {/* TODO: only show one player at a time, the rest are preview images */}
-        {/* https://www.npmjs.com/package/react-player */}
-        <ReactPlayer
-          onClickPreview={handleClickPreview}
-          width={530}
-          height={300}
-          style={{
-            transform: `scale(${PLAYER_SCALE})`,
-            transformOrigin: "top left",
-          }}
-          // playing={isPlaying}
-          light={true}
-          url={url}
-        />
-      </Html>
-    </Billboard>
-  );
-}
-
-// dome = cube with 9 on each side (9+9+8=26 total)
-const SIDE_DISTANCE = 10;
-const sidesZ = [
-  SIDE_DISTANCE, // front (towards you)
-  0, // center
-  -SIDE_DISTANCE, // back (towards the screen)
-];
-const RELATIVE_DOME_POSITIONS = sidesZ.reduce(
-  (acc, s) => [
-    ...acc,
-    ...(s === sidesZ[0] ? [] : [[0, 0, s]]), // center
-    [SIDE_DISTANCE, 0, s], // right
-    [-SIDE_DISTANCE, 0, s], // left
-    [0, SIDE_DISTANCE, s], // top
-    [0, -SIDE_DISTANCE, s], // bottom
-    // [SIDE_DISTANCE, SIDE_DISTANCE, s], // top right
-    // [-SIDE_DISTANCE, SIDE_DISTANCE, s], // top left
-    // [SIDE_DISTANCE, -SIDE_DISTANCE, s], // bottom right
-    // [-SIDE_DISTANCE, -SIDE_DISTANCE, s], // bottom left
-  ],
-  [] as number[][]
-);
-function getDomeOfPositionsAround(position: [number, number, number]) {
-  const [px, py, pz] = position;
-  return RELATIVE_DOME_POSITIONS.map(([dx, dy, dz]) => [
-    px + dx,
-    py + dy,
-    pz + dz,
-  ]) as [number, number, number][];
-}
+export default Youtubes;

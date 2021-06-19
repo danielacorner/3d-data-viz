@@ -82,3 +82,37 @@ export const ROLL_TIME = 3.5 * 1000;
 export const CAMERA_DISTANCE_FROM_PLAYER = 5;
 
 export const IS_API_ENABLED = true;
+
+// dome = cube with 9 on each side (9+9+8=26 total)
+const SIDE_DISTANCE = 10;
+const sidesZ = [
+  SIDE_DISTANCE,
+  0,
+  -SIDE_DISTANCE, // back (towards the screen)
+];
+const RELATIVE_DOME_POSITIONS = sidesZ.reduce(
+  (acc, s) => [
+    ...acc,
+    ...(s === sidesZ[0] ? [] : [[0, 0, s]]),
+    [SIDE_DISTANCE, 0, s],
+    [-SIDE_DISTANCE, 0, s],
+    [0, SIDE_DISTANCE, s],
+    [0, -SIDE_DISTANCE, s], // bottom
+    // [SIDE_DISTANCE, SIDE_DISTANCE, s], // top right
+    // [-SIDE_DISTANCE, SIDE_DISTANCE, s], // top left
+    // [SIDE_DISTANCE, -SIDE_DISTANCE, s], // bottom right
+    // [-SIDE_DISTANCE, -SIDE_DISTANCE, s], // bottom left
+  ],
+  [] as number[][]
+);
+
+export const INITIAL_PLAYER_POSITIONS: [number, number, number][] =
+  getDomeOfPositionsAround([0, 0, 0]);
+export function getDomeOfPositionsAround(position: [number, number, number]) {
+  const [px, py, pz] = position;
+  return RELATIVE_DOME_POSITIONS.map(([dx, dy, dz]) => [
+    px + dx,
+    py + dy,
+    pz + dz,
+  ]) as [number, number, number][];
+}
