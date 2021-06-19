@@ -31,15 +31,17 @@ export function useFetchYoutubeUrls({
     youtubeUrls: data?.items.map(
       (item) => `https://www.youtube.com/watch?v=${item.id.videoId}`
     ),
+    youtubeIds: data?.items.map((item) => item.id.videoId),
   };
 }
 
-export function fetchYoutubeUrls({
+export function fetchYoutubeUrlsRelatedTo({
   numUrlsToFetch,
+  relatedToVideoId,
 }: {
   numUrlsToFetch: number;
+  relatedToVideoId: string;
 }) {
-  const relatedToVideoId = "Ks-_Mh1QhMc";
   // relatedToVideoId query
   // https://developers.google.com/youtube/v3/docs/search/list
   return fetch(
@@ -51,5 +53,6 @@ export function fetchYoutubeUrls({
       youtubeUrls: data?.items.map(
         (item) => `https://www.youtube.com/watch?v=${item.id.videoId}`
       ),
+      youtubeIds: data?.items.map((item) => item.id.videoId),
     }));
 }

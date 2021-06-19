@@ -65,9 +65,26 @@ export function YoutubePlayer({
             url={url}
           />
         ) : (
-          <CircularProgress />
+          <LoadingSpinner />
         )}
       </Html>
     </Billboard>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        placeContent: "center",
+        placeItems: "center",
+        transform: "scale(0.5)",
+      }}
+    >
+      <CircularProgress />
+    </div>
   );
 }

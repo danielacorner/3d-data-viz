@@ -12,7 +12,11 @@ import {
 import Youtubes from "./Youtubes/Youtubes";
 import { Lighting } from "../Lighting/Lighting";
 import { Controls } from "react-three-gui";
-import { isInfoOverlayVisibleAtom, lookAtTargetAtom } from "../../store/store";
+import {
+  initialYoutubeIdAtom,
+  isInfoOverlayVisibleAtom,
+  lookAtTargetAtom,
+} from "../../store/store";
 import { Canvas } from "@react-three/fiber";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { CAMERA_POSITION_INITIAL } from "../../utils/constants";
@@ -63,6 +67,8 @@ function Scene() {
   const turbidity = useTurbidityByTimeOfDay();
   // const [isCameraAnimating] = useAtom(isCameraAnimatingAtom);
   const [lookAtTarget] = useAtom(lookAtTargetAtom);
+  const [initialYoutubeId] = useAtom(initialYoutubeIdAtom);
+
   return (
     <QueryClientProviderWithClient>
       <ErrorBoundary component={<Html>❌ Scene</Html>}>
@@ -75,7 +81,7 @@ function Scene() {
           mieDirectionalG={1}
           turbidity={turbidity}
         />
-        <Youtubes />
+        {initialYoutubeId && <Youtubes {...{ initialYoutubeId }} />}
       </ErrorBoundary>
     </QueryClientProviderWithClient>
   );
