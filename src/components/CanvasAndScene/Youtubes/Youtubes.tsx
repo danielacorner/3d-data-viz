@@ -7,6 +7,7 @@ import { YoutubePlayer } from "./YoutubePlayer";
 import { INITIAL_PLAYER_POSITIONS } from "../../../utils/constants";
 import { useMount } from "../../../utils/hooks";
 
+const INITIAL_POSITION: [number, number, number] = [0, 0, 0];
 export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
 /** a field of youtubes, walk around to get recommendations based on the current video */
@@ -18,12 +19,14 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
     {
       url: initialYoutubeUrl,
       videoId: initialYoutubeId,
-      position: [0, 0, 0],
+      position: INITIAL_POSITION,
     },
   ]);
   // start with dome of loading players around center player
   const [loadingPlayers, setLoadingPlayers] = useState<PlayerType[]>(
-    INITIAL_PLAYER_POSITIONS.map((position) => ({
+    INITIAL_PLAYER_POSITIONS.filter(
+      (p) => JSON.stringify(p) !== JSON.stringify(INITIAL_POSITION)
+    ).map((position) => ({
       url: null,
       videoId: null,
       position,
