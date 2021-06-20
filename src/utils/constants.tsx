@@ -84,24 +84,24 @@ export const CAMERA_DISTANCE_FROM_PLAYER = 5;
 export const IS_API_ENABLED = true;
 
 // dome = cube with 9 on each side (9+9+8=26 total)
-const SIDE_DISTANCE = 10;
+export const DISTANCE_BETWEEN_VIDEOS = 8;
 const sidesZ = [
-  SIDE_DISTANCE,
+  DISTANCE_BETWEEN_VIDEOS,
   0,
-  -SIDE_DISTANCE, // back (towards the screen)
+  -DISTANCE_BETWEEN_VIDEOS, // back (towards the screen)
 ];
 const RELATIVE_DOME_POSITIONS = sidesZ.reduce(
   (acc, s) => [
     ...acc,
     ...(s === sidesZ[0] ? [] : [[0, 0, s]]),
-    [SIDE_DISTANCE, 0, s],
-    [-SIDE_DISTANCE, 0, s],
-    [0, SIDE_DISTANCE, s],
-    [0, -SIDE_DISTANCE, s], // bottom
-    // [SIDE_DISTANCE, SIDE_DISTANCE, s], // top right
-    // [-SIDE_DISTANCE, SIDE_DISTANCE, s], // top left
-    // [SIDE_DISTANCE, -SIDE_DISTANCE, s], // bottom right
-    // [-SIDE_DISTANCE, -SIDE_DISTANCE, s], // bottom left
+    [DISTANCE_BETWEEN_VIDEOS, 0, s],
+    [-DISTANCE_BETWEEN_VIDEOS, 0, s],
+    [0, DISTANCE_BETWEEN_VIDEOS, s],
+    [0, -DISTANCE_BETWEEN_VIDEOS, s], // bottom
+    // [DISTANCE_BETWEEN_VIDEOS, DISTANCE_BETWEEN_VIDEOS, s], // top right
+    // [-DISTANCE_BETWEEN_VIDEOS, DISTANCE_BETWEEN_VIDEOS, s], // top left
+    // [DISTANCE_BETWEEN_VIDEOS, -DISTANCE_BETWEEN_VIDEOS, s], // bottom right
+    // [-DISTANCE_BETWEEN_VIDEOS, -DISTANCE_BETWEEN_VIDEOS, s], // bottom left
   ],
   [] as number[][]
 );
