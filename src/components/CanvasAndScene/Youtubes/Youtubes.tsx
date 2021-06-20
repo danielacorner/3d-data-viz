@@ -7,6 +7,8 @@ import { YoutubePlayer } from "./YoutubePlayer";
 import { INITIAL_PLAYER_POSITIONS } from "../../../utils/constants";
 import { useMount } from "../../../utils/hooks";
 import { PreviousPositionsIndicator } from "./PreviousPositionsIndicator";
+import { useAtom } from "jotai";
+import { playersAtom } from "../../../store/store";
 
 const INITIAL_POSITION: [number, number, number] = [0, 0, 0];
 export const PLAYER_DIMENSIONS = [2, 1, 0.1];
@@ -15,14 +17,21 @@ export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
   const initialYoutubeUrl = `https://www.youtube.com/watch?v=${initialYoutubeId}`;
 
+  const [players, setPlayers] = useAtom(playersAtom); // playersAtom saves to LS
+
   // start with a single loaded player
-  const [players, setPlayers] = useState<PlayerType[]>([
-    {
-      url: initialYoutubeUrl,
-      videoId: initialYoutubeId,
-      position: INITIAL_POSITION,
-    },
-  ]);
+  useMount(() => {
+    if (players.length === 0) {
+      setPlayers([
+        {
+          url: initialYoutubeUrl,
+          videoId: initialYoutubeId,
+          position: INITIAL_POSITION,
+        },
+      ]);
+    }
+  });
+
   // start with dome of loading players around center player
   const [loadingPlayers, setLoadingPlayers] = useState<PlayerType[]>(
     INITIAL_PLAYER_POSITIONS.filter(
@@ -36,6 +45,10 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
 
   // on mount, fetch videos related to initialYoutubeId
   useMount(() => {
+    // skip if we already have some videos from LS
+    if (players.length > 1) {
+      return;
+    }
     (async () => {
       const { youtubeUrls, youtubeIds } = await fetchYoutubeUrlsRelatedTo({
         numUrlsToFetch: loadingPlayers.length,
@@ -55,7 +68,7 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
     [number, number, number][]
   >([INITIAL_POSITION]);
 
-  // TODO: store urls in LS,
+  // TODO: stop other players playing when we click a player
   // on click, populate adjacent players with video urls
   const onPlayerClick = async (
     position: [number, number, number],

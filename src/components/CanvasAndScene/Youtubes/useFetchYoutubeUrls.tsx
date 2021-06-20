@@ -28,10 +28,10 @@ export function useFetchYoutubeUrls({
     isLoading,
     error,
     data,
-    youtubeUrls: data?.items.map(
-      (item) => `https://www.youtube.com/watch?v=${item.id.videoId}`
+    youtubeUrls: data?.items?.map(
+      (item) => `https://www.youtube.com/watch?v=${item.id.videoId}` || []
     ),
-    youtubeIds: data?.items.map((item) => item.id.videoId),
+    youtubeIds: data?.items?.map((item) => item.id.videoId) || [],
   };
 }
 

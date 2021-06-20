@@ -1,4 +1,5 @@
 import { atom, useAtom } from "jotai";
+import { PlayerType } from "../components/CanvasAndScene/Youtubes/Youtubes";
 
 // jotai vs zustand https://github.com/pmndrs/jotai/issues/13
 // jotai + typescript https://docs.pmnd.rs/jotai/guides/typescript
@@ -19,6 +20,10 @@ export const isPropertyAnimatingAtom = atom<boolean>(false);
 export const isInfoOverlayVisibleAtom = atomWithLocalStorage(
   "store:isInfoOverlayVisible",
   false
+);
+export const playersAtom = atomWithLocalStorage<PlayerType[]>(
+  "store:players",
+  []
 );
 export const scrollTopPctAtom = atom<number>(0);
 export const scrollYAtom = atom<number>(0);
@@ -74,5 +79,5 @@ function atomWithLocalStorage<T>(key, initialValue: T) {
       localStorage.setItem(key, JSON.stringify(nextValue));
     }
   );
-  return derivedAtom;
+  return derivedAtom as typeof baseAtom;
 }

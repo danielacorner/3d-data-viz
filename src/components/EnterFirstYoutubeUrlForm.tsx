@@ -1,12 +1,13 @@
 import { Button, Dialog, TextField } from "@material-ui/core";
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { initialYoutubeIdAtom } from "../store/store";
+import { initialYoutubeIdAtom, playersAtom } from "../store/store";
 import styled from "styled-components/macro";
 import ReactPlayer from "react-player";
 
 export function EnterFirstYoutubeUrlForm() {
-  const [open, setOpen] = useState(true);
+  const [players] = useAtom(playersAtom);
+  const open = players.length < 1;
   const [value, setValue] = useState("youtube.com/watch?v=eCbyqm9jcBA");
   const [, setInitialYoutubeId] = useAtom(initialYoutubeIdAtom);
 
@@ -19,7 +20,6 @@ export function EnterFirstYoutubeUrlForm() {
             e.preventDefault();
             const initialYoutubeId = getIdFromValue(value);
             setInitialYoutubeId(initialYoutubeId);
-            setOpen(false);
           }}
         >
           <TextField
