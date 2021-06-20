@@ -11,7 +11,7 @@ export function EnterFirstYoutubeUrlForm() {
   const [, setInitialYoutubeId] = useAtom(initialYoutubeIdAtom);
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} PaperProps={{ style: { overflow: "visible" } }}>
       <EnterFirstYoutubeUrlFormStyles>
         <h1 className="title">🌳 youtube-forest</h1>
         <form
@@ -35,11 +35,9 @@ export function EnterFirstYoutubeUrlForm() {
         {getIsValueValid(value) && (
           <div className="player">
             <ReactPlayer
-              // onClickPreview={handleClickPreview}
               width={260}
               height={150}
-              // playing={isPlaying}
-              light={true}
+              // light={true}
               url={value}
             />
           </div>
@@ -61,6 +59,7 @@ function getIsValueValid(value: string) {
 const EnterFirstYoutubeUrlFormStyles = styled.div`
   max-width: calc(100vw - 32px);
   padding: 0.5em 1em;
+  overflow: visible;
   form {
     display: flex;
     flex-direction: column;
@@ -79,12 +78,12 @@ const EnterFirstYoutubeUrlFormStyles = styled.div`
   }
   position: relative;
   .player {
-    background: white;
+    pointer-events: none;
     margin: auto;
     position: absolute;
-    bottom: -300px;
-    left: 0;
-    right: 0;
+    bottom: -172px;
+    background: white;
+    opacity: 0.5;
   }
 `;
 function getIdFromValue(value: string): string {
