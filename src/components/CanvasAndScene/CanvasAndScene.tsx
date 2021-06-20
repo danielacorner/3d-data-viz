@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { useWindowSize } from "../../utils/hooks";
 import * as THREE from "three";
-import { Html } from "@react-three/drei";
+import { Html, Detailed } from "@react-three/drei";
 import {
   Environment,
   OrbitControls,
@@ -73,15 +73,21 @@ function Scene() {
     <QueryClientProviderWithClient>
       <ErrorBoundary component={<Html>❌ Scene</Html>}>
         <OrbitControls target={lookAtTarget} {...({} as any)} />
-        <Stars count={1000} />
-        <Environment background={false} path={"/"} preset={"night"} />
-        <Sky
-          rayleigh={7}
-          mieCoefficient={0.1}
-          mieDirectionalG={1}
-          turbidity={turbidity}
-        />
-        {initialYoutubeId && <Youtubes {...{ initialYoutubeId }} />}
+        <Detailed distances={[0, 10, 20]} {...({} as any)}>
+          <Stars count={1000} />
+          <Environment background={false} path={"/"} preset={"night"} />
+          <Sky
+            rayleigh={7}
+            mieCoefficient={0.1}
+            mieDirectionalG={1}
+            turbidity={turbidity}
+          />
+          {initialYoutubeId ? (
+            <Youtubes {...{ initialYoutubeId }} />
+          ) : (
+            (null as any)
+          )}
+        </Detailed>
       </ErrorBoundary>
     </QueryClientProviderWithClient>
   );

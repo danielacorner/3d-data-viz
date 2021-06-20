@@ -54,5 +54,9 @@ export function fetchYoutubeUrlsRelatedTo({
         (item) => `https://www.youtube.com/watch?v=${item.id.videoId}`
       ),
       youtubeIds: data?.items.map((item) => item.id.videoId),
-    }));
+    }))
+    .catch((err) => {
+      console.info(err);
+      return { youtubeUrls: [], youtubeIds: [] };
+    });
 }

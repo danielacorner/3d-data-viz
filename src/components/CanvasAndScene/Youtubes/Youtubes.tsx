@@ -113,6 +113,7 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
           ))}
       </mesh>
       <PreviousPositionsIndicator {...{ positionsHistory }} />
+      {/* // TODO: add text indicating current & nearby video details  */}
     </ErrorBoundary>
   );
 };
