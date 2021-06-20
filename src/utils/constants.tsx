@@ -116,3 +116,5 @@ export function getDomeOfPositionsAround(position: [number, number, number]) {
     pz + dz,
   ]) as [number, number, number][];
 }
+
+export const INITIAL_PLAYER_POSITION: [number, number, number] = [0, 0, 0];

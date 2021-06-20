@@ -14,3 +14,17 @@ export function findAdjacentUnoccupiedPositionsTo(
 
   return unoccupiedAdjacentPositions;
 }
+
+/**generate an 11 character youtube video ID.
+ * It might not be valid...
+ */
+export function getRandomVideoId() {
+  var codeLength = 11;
+  var possibles =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-_";
+  var code = "";
+  for (var i = 0; i < codeLength; i++) {
+    code += possibles.charAt(Math.floor(Math.random() * possibles.length));
+  }
+  return code;
+}

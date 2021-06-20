@@ -25,6 +25,7 @@ export const playersAtom = atomWithLocalStorage<PlayerType[]>(
   "store:players",
   []
 );
+export const errorAtom = atom<any | null>(null);
 export const scrollTopPctAtom = atom<number>(0);
 export const scrollYAtom = atom<number>(0);
 export const isZoomedAtom = atom<boolean>(false);

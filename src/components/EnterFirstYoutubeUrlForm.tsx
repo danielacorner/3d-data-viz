@@ -4,9 +4,10 @@ import { useAtom } from "jotai";
 import { initialYoutubeIdAtom, playersAtom } from "../store/store";
 import styled from "styled-components/macro";
 import ReactPlayer from "react-player";
+import { INITIAL_PLAYER_POSITION } from "../utils/constants";
 
 export function EnterFirstYoutubeUrlForm() {
-  const [players] = useAtom(playersAtom);
+  const [players, setPlayers] = useAtom(playersAtom);
   const open = players.length < 1;
   const [value, setValue] = useState("youtube.com/watch?v=eCbyqm9jcBA");
   const [, setInitialYoutubeId] = useAtom(initialYoutubeIdAtom);
@@ -19,7 +20,17 @@ export function EnterFirstYoutubeUrlForm() {
           onSubmit={(e) => {
             e.preventDefault();
             const initialYoutubeId = getIdFromValue(value);
+            const initialYoutubeUrl = `https://www.youtube.com/watch?v=${initialYoutubeId}`;
+
             setInitialYoutubeId(initialYoutubeId);
+
+            setPlayers([
+              {
+                url: initialYoutubeUrl,
+                videoId: initialYoutubeId,
+                position: INITIAL_PLAYER_POSITION,
+              },
+            ]);
           }}
         >
           <TextField
