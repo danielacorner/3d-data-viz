@@ -58,7 +58,6 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
         console.log("🌟🚨🚨🚨🚨🚨🚨 ~ data?.error?.code", data?.error?.code);
         return;
       }
-      console.log("🌟🚨 ~ youtubeUrls", youtubeUrls);
       const adjacentPlayers = loadingPlayers.map(({ position }, idx) => ({
         url: youtubeUrls[idx],
         videoId: youtubeIds[idx],
@@ -72,14 +71,11 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
   // when we get error 403 (cannotFetchData) for the first time, refetch fake players
   useEffect(() => {
     const numUrlsToFetch = loadingPlayers.length;
-    console.log("🌟🚨 ~ useEffect ~ cannotFetchData", cannotFetchData);
-    console.log("🌟🚨 ~ useEffect ~ numUrlsToFetch", numUrlsToFetch);
     if (cannotFetchData && numUrlsToFetch > 0) {
       (async () => {
         const { youtubeUrls, youtubeIds } = await fetchRandomYoutubeUrls(
           numUrlsToFetch
         );
-        console.log("🌟🚨🌟🚨🌟🚨 ~ youtubeUrls", youtubeUrls);
         const adjacentPlayers = loadingPlayers.map(({ position }, idx) => ({
           url: youtubeUrls[idx],
           videoId: youtubeIds[idx],
@@ -170,6 +166,5 @@ export default Youtubes;
 
 function useIs403Error() {
   const [error] = useAtom(errorAtom);
-  console.log("🌟🚨 ~ useIs403Error ~ error", error);
   return (error as any)?.code && (error as any).code === 403;
 }

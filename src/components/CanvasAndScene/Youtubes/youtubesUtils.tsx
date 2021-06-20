@@ -19,11 +19,11 @@ export function findAdjacentUnoccupiedPositionsTo(
  * It might not be valid...
  */
 export function getRandomVideoId() {
-  var codeLength = 11;
-  var possibles =
+  const codeLength = 11;
+  const possibles =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-_";
-  var code = "";
-  for (var i = 0; i < codeLength; i++) {
+  let code = "";
+  for (let i = 0; i < codeLength; i++) {
     code += possibles.charAt(Math.floor(Math.random() * possibles.length));
   }
   return code;

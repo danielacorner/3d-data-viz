@@ -52,7 +52,6 @@ export async function fetchYoutubeUrlsRelatedTo({
   )
     .then((res) => res.json())
     .then((data) => {
-      console.log("🌟🚨 ~ .then ~ data", data);
       if (data?.error?.code) {
         setError(data.error);
       }
@@ -73,33 +72,37 @@ export async function fetchYoutubeUrlsRelatedTo({
 }
 
 export async function fetchRandomYoutubeUrls(numUrlsToFetch: number) {
-  const fakeIds = [...Array(numUrlsToFetch)].map((_, idx) =>
-    getRandomVideoId()
-  );
-  console.log("🌟🚨 ~ fetchRandomYoutubeUrls ~ fakeIds", fakeIds);
-  const fakeUrls = fakeIds.map((id) => `https://www.youtube.com/watch?v=${id}`);
-  console.log("🌟🚨 ~ fetchRandomYoutubeUrls ~ fakeUrls", fakeUrls);
+  const validFakeIds: string[] = [];
 
   // TODO: retry fetching urls until all the ids are valid
-  let attemptsRemaining = 20;
-  let successes = 0;
-  while (attemptsRemaining > 0 && successes < numUrlsToFetch) {
-    attemptsRemaining--;
-    const response = await fetch(fakeUrls[0])
-      .then((resp) => resp.text())
-      .catch((err) => {
-        console.count(err);
-      });
-    console.log("🌟🚨 ~ fetchRandomYoutubeUrls ~ response", response);
-    const isSuccess = false;
-    if (isSuccess) {
-      successes++;
+  let retriesRemaining = 100;
+  while (retriesRemaining > 0 && validFakeIds.length < numUrlsToFetch) {
+    for (let i = 0; i < retriesRemaining + numUrlsToFetch; i++) {
+      const fakeId = getRandomVideoId();
+      const response = await fetch(
+        `https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=${fakeId}`
+      )
+        .then((resp) => resp.text())
+        .catch((err) => {
+          console.count(err);
+        });
+      console.log("🌟🚨 ~ fetchRandomYoutubeUrls ~ response", response);
+      const isError =
+        String(response).includes("Bad Request") ||
+        String(response).includes("Not Found");
+      if (!isError) {
+        validFakeIds.push(fakeId);
+      } else {
+        retriesRemaining--;
+      }
     }
   }
 
   return Promise.resolve({
     data: null,
-    youtubeUrls: fakeUrls,
-    youtubeIds: fakeIds,
+    youtubeUrls: validFakeIds.map(
+      (id) => `https://www.youtube.com/watch?v=${id}`
+    ),
+    youtubeIds: validFakeIds,
   });
 }
