@@ -1,11 +1,15 @@
 import { Line, Text } from "@react-three/drei";
+import { useAtom } from "jotai";
+import { positionsHistoryAtom } from "../../../store/store";
 
 /** save a trail of previous positions */
-export function PreviousPositionsIndicator({
-  positionsHistory,
-}: {
-  positionsHistory: [number, number, number][];
-}) {
+export function PreviousPositionsIndicator() {
+  const [positionsHistory] = useAtom(positionsHistoryAtom);
+  console.log(
+    "🌟🚨 ~ PreviousPositionsIndicator ~ positionsHistory",
+    positionsHistory
+  );
+
   return (
     <mesh>
       <Line color={"white"} points={positionsHistory} />;

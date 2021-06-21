@@ -77,21 +77,19 @@ function Scene() {
     <QueryClientProviderWithClient>
       <ErrorBoundary component={<Html>❌ Scene</Html>}>
         <OrbitControls target={lookAtTarget} {...({} as any)} />
-        <Detailed distances={[0, 10, 20]} {...({} as any)}>
-          <Stars count={1000} />
-          <Environment background={false} path={"/"} preset={"night"} />
-          <Sky
-            rayleigh={7}
-            mieCoefficient={0.1}
-            mieDirectionalG={1}
-            turbidity={turbidity}
-          />
-          {initialYoutubeIdDisplay ? (
-            <Youtubes {...{ initialYoutubeId: initialYoutubeIdDisplay }} />
-          ) : (
-            (null as any)
-          )}
-        </Detailed>
+        <Stars count={1000} />
+        <Environment background={false} path={"/"} preset={"night"} />
+        <Sky
+          rayleigh={7}
+          mieCoefficient={0.1}
+          mieDirectionalG={1}
+          turbidity={turbidity}
+        />
+        {initialYoutubeIdDisplay ? (
+          <Youtubes {...{ initialYoutubeId: initialYoutubeIdDisplay }} />
+        ) : (
+          (null as any)
+        )}
       </ErrorBoundary>
     </QueryClientProviderWithClient>
   );
