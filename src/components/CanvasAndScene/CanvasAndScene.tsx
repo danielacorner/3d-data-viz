@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { useWindowSize } from "../../utils/hooks";
 import * as THREE from "three";
-import { Html, Detailed } from "@react-three/drei";
+import { Html } from "@react-three/drei";
 import {
   Environment,
   OrbitControls,
