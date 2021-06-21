@@ -16,6 +16,7 @@ import {
   initialYoutubeIdAtom,
   isInfoOverlayVisibleAtom,
   lookAtTargetAtom,
+  playersAtom,
 } from "../../store/store";
 import { Canvas } from "@react-three/fiber";
 import { ErrorBoundary } from "../ErrorBoundary";
@@ -69,6 +70,9 @@ function Scene() {
   const [lookAtTarget] = useAtom(lookAtTargetAtom);
   const [initialYoutubeId] = useAtom(initialYoutubeIdAtom);
 
+  const [players] = useAtom(playersAtom);
+  const initialYoutubeIdDisplay =
+    players.length > 0 ? players[0].videoId : initialYoutubeId;
   return (
     <QueryClientProviderWithClient>
       <ErrorBoundary component={<Html>❌ Scene</Html>}>
@@ -82,8 +86,8 @@ function Scene() {
             mieDirectionalG={1}
             turbidity={turbidity}
           />
-          {initialYoutubeId ? (
-            <Youtubes {...{ initialYoutubeId }} />
+          {initialYoutubeIdDisplay ? (
+            <Youtubes {...{ initialYoutubeId: initialYoutubeIdDisplay }} />
           ) : (
             (null as any)
           )}

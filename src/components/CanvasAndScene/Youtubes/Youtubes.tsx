@@ -14,6 +14,8 @@ import { useMount } from "../../../utils/hooks";
 import { PreviousPositionsIndicator } from "./PreviousPositionsIndicator";
 import { useAtom } from "jotai";
 import { errorAtom, playersAtom } from "../../../store/store";
+import isEqual from "lodash.isequal";
+import uniqBy from "lodash.uniqby";
 
 export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
@@ -25,6 +27,7 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
 
   const [, setError] = useAtom(errorAtom);
   const [players, setPlayers] = useAtom(playersAtom); // playersAtom saves to LS
+  console.log("🌟🚨 ~ Youtubes ~ players", players);
 
   // start with dome of loading players around center player
   const [loadingPlayers, setLoadingPlayers] = useState<PlayerType[]>(
@@ -87,7 +90,7 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [cannotFetchData, loadingPlayers]);
 
-  // when we get error 403 (cannotFetchData) for the first time, set fake players
+  // when we get error 403 (cannotFetchData) for the first time, set all players to show the same video
   useEffect(() => {
     if (cannotFetchData && loadingPlayers.length > 0) {
       const adjacentPlayers = loadingPlayers.map(({ position }, idx) => ({
@@ -146,11 +149,15 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
   return (
     <ErrorBoundary component={<Html>❌ Youtubes</Html>}>
       <mesh>
-        {[...players, ...loadingPlayers]
-          // uniqBy([...players, ...loadingPlayers], (player) =>
-          //   JSON.stringify(player.position)
-          // )
-          .map(({ position, url, videoId }) => (
+        {uniqBy([...players, ...loadingPlayers], (player) =>
+          JSON.stringify(player.position)
+        ).map(({ position, url, videoId }) => {
+          const isCurrentPosition = isEqual(
+            position,
+            positionsHistory[positionsHistory.length - 1]
+          );
+          console.log("🌟🚨 ~ .map ~ isCurrentPosition", isCurrentPosition);
+          return (
             <YoutubePlayer
               key={JSON.stringify(position)}
               {...{
@@ -161,7 +168,8 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
                   : {}),
               }}
             />
-          ))}
+          );
+        })}
       </mesh>
       <PreviousPositionsIndicator {...{ positionsHistory }} />
       {/* // TODO: add text indicating current & nearby video details  */}
