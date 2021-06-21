@@ -110,7 +110,8 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
 
   const [positionsHistory, setPositionsHistory] = useAtom(positionsHistoryAtom);
 
-  // TODO: stop other players playing when we click a player
+  const [isPlaying, setIsPlaying] = useState(false);
+
   // on click, populate adjacent players with video urls
   const onPlayerClick = async (
     position: [number, number, number],
@@ -146,6 +147,9 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
     );
     setLoadingPlayers([]);
     setPlayers([...players, ...adjacentPlayers]);
+
+    // start this player on click
+    setIsPlaying(true);
   };
 
   return (
@@ -158,12 +162,13 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
             position,
             positionsHistory[positionsHistory.length - 1]
           );
-          console.log("🌟🚨 ~ .map ~ isCurrentPosition", isCurrentPosition);
           return (
             <YoutubePlayer
               key={JSON.stringify(position)}
               {...{
                 position,
+                // stop other players playing when we click a player
+                isPlaying: isPlaying && isCurrentPosition,
                 url,
                 ...(videoId
                   ? { onClick: () => onPlayerClick(position, videoId) }
@@ -178,6 +183,19 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
     </ErrorBoundary>
   );
 };
+
+/** when clicking to a different player, stop all players (then we can click the video again to play it) */
+// function useRerenderOnPositionChange() {
+//   const [rerenderKey, setRerenderKey] = useState(Math.random());
+
+//   const [positionsHistory] = useAtom(positionsHistoryAtom);
+//   // when we click to a new position, stop all players
+//   useEffect(() => {
+//     setRerenderKey(Math.random());
+//   }, [positionsHistory]);
+
+//   return rerenderKey;
+// }
 
 export type PlayerType = {
   url: string | null;

@@ -11,11 +11,13 @@ export function YoutubePlayer({
   url,
   onClickAfterCameraMove,
   onClick,
+  isPlaying,
 }: {
   position: [number, number, number];
   url: string | null;
   onClickAfterCameraMove?: Function;
   onClick?: () => void;
+  isPlaying?: boolean;
 }) {
   const { animateCameraPositionTo } = useAnimateCameraPositionTo(position);
 
@@ -60,7 +62,8 @@ export function YoutubePlayer({
               transform: `scale(${PLAYER_SCALE})`,
               transformOrigin: "top left",
             }}
-            // playing={isPlaying}
+            // {...(isStopped ? { playing: false } : {})}
+            playing={isPlaying}
             light={true}
             url={url}
           />
