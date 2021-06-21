@@ -13,7 +13,11 @@ import {
 import { useMount } from "../../../utils/hooks";
 import { PreviousPositionsIndicator } from "./PreviousPositionsIndicator";
 import { useAtom } from "jotai";
-import { errorAtom, playersAtom } from "../../../store/store";
+import {
+  errorAtom,
+  playersAtom,
+  positionsHistoryAtom,
+} from "../../../store/store";
 import isEqual from "lodash.isequal";
 import uniqBy from "lodash.uniqby";
 
@@ -104,9 +108,7 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cannotFetchData, loadingPlayers]);
 
-  const [positionsHistory, setPositionsHistory] = useState<
-    [number, number, number][]
-  >([INITIAL_PLAYER_POSITION]);
+  const [positionsHistory, setPositionsHistory] = useAtom(positionsHistoryAtom);
 
   // TODO: stop other players playing when we click a player
   // on click, populate adjacent players with video urls

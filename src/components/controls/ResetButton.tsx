@@ -6,18 +6,21 @@ import {
   errorAtom,
   initialYoutubeIdAtom,
   playersAtom,
+  positionsHistoryAtom,
   resetPositionKeyAtom,
 } from "../../store/store";
+import { INITIAL_PLAYER_POSITION } from "../../utils/constants";
 
 /** show or hide the info overlay */
-export function ResetPositionButton() {
+export function ResetButton() {
   const [, setResetPositionKey] = useAtom(resetPositionKeyAtom);
   const [, setPlayers] = useAtom(playersAtom);
   const [, setError] = useAtom(errorAtom);
   const [, setInitialYoutubeId] = useAtom(initialYoutubeIdAtom);
+  const [, setPositionsHistory] = useAtom(positionsHistoryAtom);
 
   return (
-    <ResetPositionButtonStyles>
+    <ResetButtonStyles>
       <Tooltip title="start over">
         <IconButton
           onClick={() => {
@@ -26,13 +29,14 @@ export function ResetPositionButton() {
             // reset players
             setInitialYoutubeId(null);
             setPlayers([]);
+            setPositionsHistory([INITIAL_PLAYER_POSITION]);
             setError(null);
           }}
         >
           <Undo />
         </IconButton>
       </Tooltip>
-    </ResetPositionButtonStyles>
+    </ResetButtonStyles>
   );
 }
-const ResetPositionButtonStyles = styled.div``;
+const ResetButtonStyles = styled.div``;

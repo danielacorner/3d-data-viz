@@ -1,6 +1,6 @@
 import styled from "styled-components/macro";
 import { InfoButton } from "./components/controls/InfoButton";
-import { ResetPositionButton } from "./components/controls/ResetPositionButton";
+import { ResetButton } from "./components/controls/ResetButton";
 import { GithubButton } from "./components/controls/GithubButton";
 import { getTimeOfDay } from "./utils/timeUtils";
 
@@ -10,7 +10,7 @@ export function CornerButtons() {
   return (
     <CornerButtonsStyles {...{ isDaytime }}>
       <div className="btn btnRollWrapper top right">
-        <ResetPositionButton />
+        <ResetButton />
       </div>
       <div className="btn btnInfoWrapper bottom left">
         <InfoButton />

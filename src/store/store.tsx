@@ -1,5 +1,6 @@
 import { atom, useAtom } from "jotai";
 import { PlayerType } from "../components/CanvasAndScene/Youtubes/Youtubes";
+import { INITIAL_PLAYER_POSITION } from "../utils/constants";
 
 // jotai vs zustand https://github.com/pmndrs/jotai/issues/13
 // jotai + typescript https://docs.pmnd.rs/jotai/guides/typescript
@@ -25,6 +26,9 @@ export const playersAtom = atomWithLocalStorage<PlayerType[]>(
   "store:players",
   []
 );
+export const positionsHistoryAtom = atomWithLocalStorage<
+  [number, number, number][]
+>("store:positionsHistory", [INITIAL_PLAYER_POSITION]);
 export const errorAtom = atom<any | null>(null);
 export const scrollTopPctAtom = atom<number>(0);
 export const scrollYAtom = atom<number>(0);
