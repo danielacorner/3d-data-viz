@@ -4,6 +4,8 @@ import { CAMERA_DISTANCE_FROM_PLAYER } from "../../../utils/constants";
 import { useAnimateCameraPositionTo } from "../../../utils/useAnimateCameraPositionTo";
 import { PLAYER_DIMENSIONS } from "./Youtubes";
 import { CircularProgress } from "@material-ui/core";
+import { useAtom } from "jotai";
+import { titleDisplayAtom } from "../../../store/store";
 
 const PLAYER_SCALE = 0.2;
 export function YoutubePlayer({
@@ -37,6 +39,8 @@ export function YoutubePlayer({
     });
   };
 
+  const [, setTitleDisplay] = useAtom(titleDisplayAtom);
+
   return (
     <Billboard position={position} {...({} as any)}>
       <boxBufferGeometry args={PLAYER_DIMENSIONS} />
@@ -62,10 +66,19 @@ export function YoutubePlayer({
               transform: `scale(${PLAYER_SCALE})`,
               transformOrigin: "top left",
             }}
-            // {...(isStopped ? { playing: false } : {})}
             playing={isPlaying}
             light={true}
             url={url}
+            onReady={(reactplayer) => {
+              const videoData = (reactplayer as any)?.player?.player?.player
+                ?.playerInfo?.videoData;
+              console.log("🌟🚨 ~ videoData", videoData);
+              const title = videoData?.title;
+              if (title) {
+                setTitleDisplay(title);
+              }
+              console.log("🌟🚨 ~ reactplayer2", reactplayer);
+            }}
           />
         ) : (
           <LoadingSpinner />

@@ -86,7 +86,6 @@ export async function fetchYoutubeUrlsRelatedTo({
 //         .catch((err) => {
 //           console.count(err);
 //         });
-//       console.log("🌟🚨 ~ fetchRandomYoutubeUrls ~ response", response);
 //       const isError =
 //         String(response).includes("Bad Request") ||
 //         String(response).includes("Not Found");

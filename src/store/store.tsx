@@ -7,6 +7,7 @@ import { INITIAL_PLAYER_POSITION } from "../utils/constants";
 // "jotai is bottom-up, like recoil; zustand is top-down, like redux
 
 export const initialYoutubeIdAtom = atom<string | null>(null);
+export const titleDisplayAtom = atom<string>("");
 export const resetPositionKeyAtom = atom<number>(0);
 export const isRollingDieAtom = atom<boolean>(false);
 export const isCameraAnimatingAtom = atom<boolean>(false);

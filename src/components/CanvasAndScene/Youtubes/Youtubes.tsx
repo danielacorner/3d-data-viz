@@ -31,7 +31,6 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
 
   const [, setError] = useAtom(errorAtom);
   const [players, setPlayers] = useAtom(playersAtom); // playersAtom saves to LS
-  console.log("🌟🚨 ~ Youtubes ~ players", players);
 
   // start with dome of loading players around center player
   const [loadingPlayers, setLoadingPlayers] = useState<PlayerType[]>(
