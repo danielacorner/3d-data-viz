@@ -20,6 +20,7 @@ import {
 } from "../../../store/store";
 import isEqual from "lodash.isequal";
 import uniqBy from "lodash.uniqby";
+import CannotFetchDataIndicator from "./CannotFetchDataIndicator";
 
 export const PLAYER_DIMENSIONS = [2, 1, 0.1];
 
@@ -178,7 +179,7 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
         })}
       </mesh>
       <PreviousPositionsIndicator />
-      {/* // TODO: add text indicating current & nearby video details  */}
+      {cannotFetchData && <CannotFetchDataIndicator />}
     </ErrorBoundary>
   );
 };

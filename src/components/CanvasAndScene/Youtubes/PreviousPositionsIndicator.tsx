@@ -1,13 +1,14 @@
 import { Line, Text } from "@react-three/drei";
 import { useAtom } from "jotai";
 import { positionsHistoryAtom, titleDisplayAtom } from "../../../store/store";
+import { useCurrentPosition } from "./youtubesUtils";
 
 /** save a trail of previous positions */
 export function PreviousPositionsIndicator() {
   const [positionsHistory] = useAtom(positionsHistoryAtom);
   const [titleDisplay] = useAtom(titleDisplayAtom);
 
-  const currentPosition = positionsHistory[positionsHistory.length - 1];
+  const currentPosition = useCurrentPosition();
 
   return (
     <mesh>

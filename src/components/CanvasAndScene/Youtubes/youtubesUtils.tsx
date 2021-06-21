@@ -1,3 +1,5 @@
+import { useAtom } from "jotai";
+import { positionsHistoryAtom } from "../../../store/store";
 import { getDomeOfPositionsAround } from "../../../utils/constants";
 import { PlayerType } from "./Youtubes";
 
@@ -29,3 +31,9 @@ export function getRandomVideoId() {
   }
   return code;
 }
+
+export const useCurrentPosition = () => {
+  const [positionsHistory] = useAtom(positionsHistoryAtom);
+
+  return positionsHistory[positionsHistory.length - 1];
+};
