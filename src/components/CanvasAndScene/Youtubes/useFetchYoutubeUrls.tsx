@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
 import { YoutubeResponseType } from "./youtubeResponseExample";
-import { getRandomVideoId } from "./youtubesUtils";
 
 const API_KEY = process.env.REACT_APP_YOUTUBE_API_KEY;
 
@@ -71,38 +70,39 @@ export async function fetchYoutubeUrlsRelatedTo({
     });
 }
 
-export async function fetchRandomYoutubeUrls(numUrlsToFetch: number) {
-  const validFakeIds: string[] = [];
+// ! doesn't work -- too unlikely to generate a valid url from getRandomVideoId
+// export async function fetchRandomYoutubeUrls(numUrlsToFetch: number) {
+//   const validFakeIds: string[] = [];
 
-  // TODO: retry fetching urls until all the ids are valid
-  let retriesRemaining = 100;
-  while (retriesRemaining > 0 && validFakeIds.length < numUrlsToFetch) {
-    for (let i = 0; i < retriesRemaining + numUrlsToFetch; i++) {
-      const fakeId = getRandomVideoId();
-      const response = await fetch(
-        `https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=${fakeId}`
-      )
-        .then((resp) => resp.text())
-        .catch((err) => {
-          console.count(err);
-        });
-      console.log("🌟🚨 ~ fetchRandomYoutubeUrls ~ response", response);
-      const isError =
-        String(response).includes("Bad Request") ||
-        String(response).includes("Not Found");
-      if (!isError) {
-        validFakeIds.push(fakeId);
-      } else {
-        retriesRemaining--;
-      }
-    }
-  }
+//   // TODO: retry fetching urls until all the ids are valid
+//   let retriesRemaining = 100;
+//   while (retriesRemaining > 0 && validFakeIds.length < numUrlsToFetch) {
+//     for (let i = 0; i < retriesRemaining + numUrlsToFetch; i++) {
+//       const fakeId = getRandomVideoId();
+//       const response = await fetch(
+//         `https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=${fakeId}`
+//       )
+//         .then((resp) => resp.text())
+//         .catch((err) => {
+//           console.count(err);
+//         });
+//       console.log("🌟🚨 ~ fetchRandomYoutubeUrls ~ response", response);
+//       const isError =
+//         String(response).includes("Bad Request") ||
+//         String(response).includes("Not Found");
+//       if (!isError) {
+//         validFakeIds.push(fakeId);
+//       } else {
+//         retriesRemaining--;
+//       }
+//     }
+//   }
 
-  return Promise.resolve({
-    data: null,
-    youtubeUrls: validFakeIds.map(
-      (id) => `https://www.youtube.com/watch?v=${id}`
-    ),
-    youtubeIds: validFakeIds,
-  });
-}
+//   return Promise.resolve({
+//     data: null,
+//     youtubeUrls: validFakeIds.map(
+//       (id) => `https://www.youtube.com/watch?v=${id}`
+//     ),
+//     youtubeIds: validFakeIds,
+//   });
+// }

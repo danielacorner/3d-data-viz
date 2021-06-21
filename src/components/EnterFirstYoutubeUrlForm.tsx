@@ -4,12 +4,15 @@ import { useAtom } from "jotai";
 import { initialYoutubeIdAtom, playersAtom } from "../store/store";
 import styled from "styled-components/macro";
 import ReactPlayer from "react-player";
-import { INITIAL_PLAYER_POSITION } from "../utils/constants";
+import {
+  INITIAL_PLAYER_POSITION,
+  INITIAL_YOUTUBE_URL,
+} from "../utils/constants";
 
 export function EnterFirstYoutubeUrlForm() {
   const [players, setPlayers] = useAtom(playersAtom);
   const open = players.length < 1;
-  const [value, setValue] = useState("youtube.com/watch?v=eCbyqm9jcBA");
+  const [value, setValue] = useState(INITIAL_YOUTUBE_URL);
   const [, setInitialYoutubeId] = useAtom(initialYoutubeIdAtom);
 
   return (

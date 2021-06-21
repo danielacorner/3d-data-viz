@@ -118,3 +118,5 @@ export function getDomeOfPositionsAround(position: [number, number, number]) {
 }
 
 export const INITIAL_PLAYER_POSITION: [number, number, number] = [0, 0, 0];
+export const INITIAL_YOUTUBE_ID = "eCbyqm9jcBA";
+export const INITIAL_YOUTUBE_URL = `youtube.com/watch?v=${INITIAL_YOUTUBE_ID}`;

@@ -1,8 +1,5 @@
 import { Html } from "@react-three/drei";
-import {
-  fetchRandomYoutubeUrls,
-  fetchYoutubeUrlsRelatedTo,
-} from "./useFetchYoutubeUrls";
+import { fetchYoutubeUrlsRelatedTo } from "./useFetchYoutubeUrls";
 import ErrorBoundary from "../../../components/ErrorBoundary";
 import { useEffect, useState } from "react";
 import { findAdjacentUnoccupiedPositionsTo } from "./youtubesUtils";
@@ -10,6 +7,8 @@ import { YoutubePlayer } from "./YoutubePlayer";
 import {
   INITIAL_PLAYER_POSITION,
   INITIAL_PLAYER_POSITIONS,
+  INITIAL_YOUTUBE_ID,
+  INITIAL_YOUTUBE_URL,
 } from "../../../utils/constants";
 import { useMount } from "../../../utils/hooks";
 import { PreviousPositionsIndicator } from "./PreviousPositionsIndicator";
@@ -45,10 +44,9 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
       return;
     }
     (async () => {
-      const numUrlsToFetch = loadingPlayers.length;
       const { youtubeUrls, youtubeIds, data } = await fetchYoutubeUrlsRelatedTo(
         {
-          numUrlsToFetch,
+          numUrlsToFetch: loadingPlayers.length,
           relatedToVideoId: initialYoutubeId,
           setError,
         }
@@ -69,21 +67,36 @@ const Youtubes = ({ initialYoutubeId }: { initialYoutubeId: string }) => {
   });
 
   // when we get error 403 (cannotFetchData) for the first time, refetch fake players
+  // ! doesn't work - getRandomVideoId unlikely to be valid
+  // useEffect(() => {
+  //   const numUrlsToFetch = loadingPlayers.length;
+  //   if (cannotFetchData && numUrlsToFetch > 0) {
+  //     (async () => {
+  //       const { youtubeUrls, youtubeIds } = await fetchRandomYoutubeUrls(
+  //         numUrlsToFetch
+  //       );
+  //       const adjacentPlayers = loadingPlayers.map(({ position }, idx) => ({
+  //         url: youtubeUrls[idx],
+  //         videoId: youtubeIds[idx],
+  //         position,
+  //       }));
+  //       setLoadingPlayers([]);
+  //       setPlayers([...players, ...adjacentPlayers]);
+  //     })();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [cannotFetchData, loadingPlayers]);
+
+  // when we get error 403 (cannotFetchData) for the first time, set fake players
   useEffect(() => {
-    const numUrlsToFetch = loadingPlayers.length;
-    if (cannotFetchData && numUrlsToFetch > 0) {
-      (async () => {
-        const { youtubeUrls, youtubeIds } = await fetchRandomYoutubeUrls(
-          numUrlsToFetch
-        );
-        const adjacentPlayers = loadingPlayers.map(({ position }, idx) => ({
-          url: youtubeUrls[idx],
-          videoId: youtubeIds[idx],
-          position,
-        }));
-        setLoadingPlayers([]);
-        setPlayers([...players, ...adjacentPlayers]);
-      })();
+    if (cannotFetchData && loadingPlayers.length > 0) {
+      const adjacentPlayers = loadingPlayers.map(({ position }, idx) => ({
+        url: "https://" + INITIAL_YOUTUBE_URL,
+        videoId: INITIAL_YOUTUBE_ID,
+        position,
+      }));
+      setLoadingPlayers([]);
+      setPlayers([...players, ...adjacentPlayers]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cannotFetchData, loadingPlayers]);
