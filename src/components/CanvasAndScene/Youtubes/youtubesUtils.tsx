@@ -9,9 +9,10 @@ export function findAdjacentUnoccupiedPositionsTo(
 ): [number, number, number][] {
   // given all players and the current position, find the adjacent players ()
   const allPlayerPositions = players.map((p) => p.position);
+  const allPlayerPositionsStringified = JSON.stringify(allPlayerPositions);
   const allAdjacentPositions = getDomeOfPositionsAround(position);
   const unoccupiedAdjacentPositions = allAdjacentPositions.filter(
-    (p) => !JSON.stringify(allPlayerPositions).includes(JSON.stringify(p))
+    (p) => !allPlayerPositionsStringified.includes(JSON.stringify(p))
   );
 
   return unoccupiedAdjacentPositions;

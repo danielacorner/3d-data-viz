@@ -2,13 +2,7 @@ import { Suspense } from "react";
 import { useWindowSize } from "../../utils/hooks";
 import * as THREE from "three";
 import { Html } from "@react-three/drei";
-import {
-  Environment,
-  OrbitControls,
-  Sky,
-  Stars,
-  Stats,
-} from "@react-three/drei";
+import { OrbitControls, Sky, Stars, Stats } from "@react-three/drei";
 import Youtubes from "./Youtubes/Youtubes";
 import { Lighting } from "../Lighting/Lighting";
 import { Controls } from "react-three-gui";
@@ -78,7 +72,7 @@ function Scene() {
       <ErrorBoundary component={<Html>❌ Scene</Html>}>
         <OrbitControls target={lookAtTarget} {...({} as any)} />
         <Stars count={1000} />
-        <Environment background={false} path={"/"} preset={"night"} />
+        {/* <Environment background={false} path={"/"} preset={"night"} /> */}
         <Sky
           rayleigh={7}
           mieCoefficient={0.1}
