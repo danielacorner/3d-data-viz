@@ -1,5 +1,4 @@
 import { Button, Dialog, TextField } from "@material-ui/core";
-import { useState } from "react";
 import { useAtom } from "jotai";
 import { initialYoutubeIdAtom, playersAtom } from "../store/store";
 import styled from "styled-components/macro";
@@ -8,11 +7,13 @@ import {
   INITIAL_PLAYER_POSITION,
   INITIAL_YOUTUBE_URL,
 } from "../utils/constants";
+import { atomWithHash } from "jotai/utils";
+const formUrlAtom = atomWithHash("url", INITIAL_YOUTUBE_URL);
 
 export function EnterFirstYoutubeUrlForm() {
   const [players, setPlayers] = useAtom(playersAtom);
   const open = players.length < 1;
-  const [value, setValue] = useState(INITIAL_YOUTUBE_URL);
+  const [value, setValue] = useAtom(formUrlAtom);
   const [, setInitialYoutubeId] = useAtom(initialYoutubeIdAtom);
 
   return (
